@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.smartcitytraveller.mobile">
 
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -44,6 +42,7 @@
 
         <activity
             android:name="com.smartcitytraveller.mobile.MainActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.SmartCityTraveller.NoActionBar">
             <intent-filter>
