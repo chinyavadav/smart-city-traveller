@@ -140,7 +140,7 @@ public class SettingsFragment extends Fragment {
                                 editTextCurrentPassword.setText(null);
                                 editTextNewPassword.setText(null);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("ConnectUs Alert")
+                                builder.setTitle("SmartCityTraveller Alert")
                                         .setMessage(responseDTO.getMessage())
                                         .setPositiveButton(android.R.string.yes, null)
                                         .show();

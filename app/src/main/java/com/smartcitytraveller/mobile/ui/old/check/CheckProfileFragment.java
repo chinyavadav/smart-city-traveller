@@ -207,7 +207,7 @@ public class CheckProfileFragment extends Fragment {
                         case "failed":
                         case "error":
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("ConnectUs Alert")
+                            builder.setTitle("SmartCityTraveller Alert")
                                     .setIcon(R.drawable.account_circle)
                                     .setMessage(responseDTO.getMessage())
                                     .setPositiveButton(android.R.string.yes, null)

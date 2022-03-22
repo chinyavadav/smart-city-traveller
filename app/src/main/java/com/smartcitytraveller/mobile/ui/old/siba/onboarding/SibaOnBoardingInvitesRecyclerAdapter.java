@@ -70,7 +70,7 @@ public class SibaOnBoardingInvitesRecyclerAdapter extends RecyclerView.Adapter<S
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("ConnectUs Alert")
+                    builder.setTitle("SmartCityTraveller Alert")
                             .setMessage("Are you sure you want to delete invite!")
                             .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                 @Override

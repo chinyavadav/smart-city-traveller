@@ -117,7 +117,7 @@ public class MobileTopupFragment extends Fragment {
                     getMobileOperator(phoneNumber);
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("ConnectUs Alert")
+                    builder.setTitle("SmartCityTraveller Alert")
                             .setMessage("Enter valid Phone Number!")
                             .setPositiveButton(android.R.string.yes, null)
                             .show();
@@ -149,7 +149,7 @@ public class MobileTopupFragment extends Fragment {
                     case "failed":
                     case "error":
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("ConnectUs Alert")
+                        builder.setTitle("SmartCityTraveller Alert")
                                 .setIcon(R.drawable.account_circle)
                                 .setMessage(responseDTO.getMessage())
                                 .setPositiveButton(android.R.string.yes, null)

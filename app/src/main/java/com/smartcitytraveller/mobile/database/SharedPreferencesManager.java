@@ -32,11 +32,11 @@ public class SharedPreferencesManager {
     @SuppressLint("CommitPrefEdits")
     public SharedPreferencesManager(Context context) {
         this.context = context;
-        this.editor = context.getSharedPreferences("connectus", MODE_PRIVATE).edit();
+        this.editor = context.getSharedPreferences("smart_city_traveller", MODE_PRIVATE).edit();
     }
 
     public Map<String, ?> getSharedPreferences() {
-        return context.getSharedPreferences("connectus", Context.MODE_PRIVATE).getAll();
+        return context.getSharedPreferences("smart_city_traveller", Context.MODE_PRIVATE).getAll();
     }
 
     public void setAuthorization(CheckResponseDto checkResponseDto) {

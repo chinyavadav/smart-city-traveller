@@ -188,7 +188,7 @@ public class CheckPaymateFragment extends Fragment {
                         case "failed":
                         case "error":
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("ConnectUs Alert")
+                            builder.setTitle("SmartCityTraveller Alert")
                                     .setMessage(responseDTO.getMessage())
                                     .setPositiveButton(android.R.string.yes, null)
                                     .show();

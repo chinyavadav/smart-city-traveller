@@ -84,4 +84,7 @@ dependencies {
     implementation 'com.mikhaellopez:circularimageview:4.2.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // amazon maps
+    implementation(name:'amazon-maps-api-v2', ext:'aar')
 }

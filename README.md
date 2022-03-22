@@ -1,4 +1,4 @@
-# ConnectUs App
+# SmartCityTraveller App
 [Icons](https://flaticon.com)
 
 [QRCode](https://github.com/journeyapps/zxing-android-embedded)
