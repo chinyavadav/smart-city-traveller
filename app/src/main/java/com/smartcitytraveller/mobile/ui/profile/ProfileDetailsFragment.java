@@ -151,7 +151,7 @@ public class ProfileDetailsFragment extends Fragment {
                     final InputStream imageStream = getContext().getContentResolver().openInputStream(sourceUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     userDTO.setAvatar(encodeImage(selectedImage));
-                    imageViewProfileAvatar.setImageURI(sourceUri);
+                    uploadAvatar(userDTO);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

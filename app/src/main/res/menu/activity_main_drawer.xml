@@ -13,9 +13,13 @@
             android:icon="@drawable/account_box"
             android:title="@string/profile" />
         <item
-            android:id="@+id/nav_share_location"
-            android:icon="@drawable/location_pin"
-            android:title="@string/share_location" />
+            android:id="@+id/nav_panic_button"
+            android:icon="@drawable/my_location"
+            android:title="@string/panic_button" />
+        <item
+            android:id="@+id/nav_next_of_kin"
+            android:icon="@drawable/person_pin"
+            android:title="@string/next_of_kin" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/settings"

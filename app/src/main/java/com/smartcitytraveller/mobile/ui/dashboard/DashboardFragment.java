@@ -29,6 +29,8 @@ import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProductDto;
+import com.smartcitytraveller.mobile.ui.panick.NextOfKinFragment;
+import com.smartcitytraveller.mobile.ui.panick.PanicButtonFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductRecyclerAdapter;
 import com.smartcitytraveller.mobile.ui.product.ProductViewModel;
@@ -54,7 +56,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     TextView textViewFullName, textViewNavHeaderFullName, textViewMsisdn, textViewNavHeaderMsisdn;
     ImageView imageViewProfileAvatar, imageViewNavHeaderAvatar, imageViewMenu;
-    RecyclerView recyclerViewProducts;
     ProgressDialog pd;
 
     FragmentManager fragmentManager;
@@ -62,9 +63,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     UserDto userDTO;
     String authentication;
     private ProductViewModel productViewModel;
-
-    ProductRecyclerAdapter productRecyclerAdapter;
-    List<ProductDto> recommendedProducts;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,15 +105,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
             syncProfileAndDisplay();
         }
 
-        DbHandler dbHandler = new DbHandler(getContext());
-        recommendedProducts = dbHandler.getProducts();
-        recommendedProducts = sortRecommendedProducts(recommendedProducts);
-        productRecyclerAdapter = new ProductRecyclerAdapter(getContext(), recommendedProducts, fragmentManager);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerViewProducts = getView().findViewById(R.id.recycler_view_recommended_products);
-        recyclerViewProducts.setAdapter(productRecyclerAdapter);
-        recyclerViewProducts.setLayoutManager(linearLayoutManager);
-
         imageViewMenu = view.findViewById(R.id.image_view_menu);
         imageViewMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
@@ -126,8 +115,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        syncDisplay(userDTO);
-        fetchRecommendedProducts();
+        syncDisplay();
     }
 
 
@@ -135,9 +123,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        userDTO = sharedPreferencesManager.getUser();
-        fetchRecommendedProducts();
-        syncDisplay(userDTO);
+        syncDisplay();
     }
 
     public void showProfileDetailsFragment() {
@@ -160,34 +146,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         transaction.commit();
     }
 
-    public void fetchRecommendedProducts() {
-        productViewModel.getProducts(getContext(), authentication).observe(getViewLifecycleOwner(), responseDTO -> {
-            switch (responseDTO.getStatus()) {
-                case "success":
-                    loadRecommendedProductsRecyclerView();
-                    break;
-                case "failed":
-                case "error":
-                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                    break;
-            }
-            pd.dismiss();
-        });
-    }
-
-    public List<ProductDto> sortRecommendedProducts(List<ProductDto> recommendedProducts) {
-        Collections.sort(recommendedProducts, (t1, t2) -> t2.getCreated().compareTo(t1.getCreated()));
-        return recommendedProducts;
-    }
-
-    public void loadRecommendedProductsRecyclerView() {
-        DbHandler dbHandler = new DbHandler(getContext());
-        List<ProductDto> products = dbHandler.getProducts();
-        List<ProductDto> sortedRecommendedProducts = sortRecommendedProducts(products);
-        recommendedProducts.clear();
-        recommendedProducts.addAll(sortedRecommendedProducts);
-        productRecyclerAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -199,7 +157,15 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
             case R.id.nav_profile:
                 showProfileDetailsFragment();
                 break;
-            case R.id.nav_share_location:
+            case R.id.nav_panic_button:
+                PanicButtonFragment panicButtonFragment = new PanicButtonFragment();
+                transaction.add(R.id.container, panicButtonFragment, PanicButtonFragment.class.getSimpleName());
+                transaction.addToBackStack(TAG);
+                break;
+            case R.id.nav_next_of_kin:
+                NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
+                transaction.add(R.id.container, nextOfKinFragment, NextOfKinFragment.class.getSimpleName());
+                transaction.addToBackStack(TAG);
                 break;
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
@@ -247,10 +213,12 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         pd.dismiss();
     }
 
-    public void syncDisplay(UserDto userDTO) {
+    public void syncDisplay() {
+        userDTO = sharedPreferencesManager.getUser();
         String fullName = userDTO.getFirstName() + " " + userDTO.getLastName();
         String msisdn = userDTO.getMsisdn();
         Util.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewNavHeaderAvatar);
         textViewFullName.setText(fullName);
         textViewNavHeaderFullName.setText(fullName);
         textViewMsisdn.setText(msisdn);
