@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.PaymateDTO;
 import com.smartcitytraveller.mobile.api.dto.JWT;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
@@ -74,7 +73,6 @@ public class SharedPreferencesManager {
     }
 
     public void setProfile(ProfileDto profileDTO) {
-        profileDTO.setBalances(null);
         editor.putString("profile", new Gson().toJson(profileDTO));
         editor.putLong("lastSync", new Date().getTime());
         editor.apply();
@@ -83,25 +81,6 @@ public class SharedPreferencesManager {
     public ProfileDto getProfile() {
         this.sharedPreferences = getSharedPreferences();
         return sharedPreferences.get("profile") != null ? new Gson().fromJson(sharedPreferences.get("profile").toString(), ProfileDto.class) : null;
-    }
-
-    public void syncPaymateTopicSubscription(ProfileDto newProfileDto) {
-        PaymateDTO oldPaymate = getProfile().getPaymate();
-        PaymateDTO newPaymate = newProfileDto.getPaymate();
-
-        if (newPaymate != null) {
-            if (oldPaymate == null && newPaymate.getPaymateStatus().equals("ACTIVE")) {
-                Common.subscribeToTopic(Constants.AGENT_TOPIC);
-            }
-            if (oldPaymate != null && !oldPaymate.getPaymateStatus().equals("ACTIVE")) {
-                Common.subscribeToTopic(Constants.AGENT_TOPIC);
-            }
-            if (oldPaymate != null && oldPaymate.getPaymateStatus().equals("ACTIVE") && !newPaymate.getPaymateStatus().equals("ACTIVE")) {
-                Common.subscribeToTopic(Constants.AGENT_TOPIC);
-            }
-        } else if (oldPaymate != null && oldPaymate.getPaymateStatus().equals("ACTIVE")) {
-            Common.subscribeToTopic(Constants.AGENT_TOPIC);
-        }
     }
 
     public long getLastSync() {

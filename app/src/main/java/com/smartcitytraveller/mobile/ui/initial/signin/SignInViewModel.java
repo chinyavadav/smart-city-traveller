@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
-import com.smartcitytraveller.mobile.api.dto.BalanceDTO;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
@@ -49,14 +48,6 @@ public class SignInViewModel extends ViewModel {
 
                         ProfileDto profileDTO = authResponseDto.getProfile();
                         sharedPreferencesManager.setProfile(profileDTO);
-
-                        Set<BalanceDTO> balances = profileDTO.getBalances();
-                        if (balances != null) {
-                            DbHandler dbHandler = new DbHandler(context);
-                            for (BalanceDTO balanceDTO : balances) {
-                                dbHandler.insertBalance(balanceDTO);
-                            }
-                        }
 
                         responseLiveData.setValue(new ResponseDTO("success", null, null));
                     } else {

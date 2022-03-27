@@ -37,7 +37,7 @@ import com.smartcitytraveller.mobile.ui.product.ProductViewModel;
 import com.smartcitytraveller.mobile.ui.product.ProductsFragment;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
-import com.smartcitytraveller.mobile.ui.old.settings.SettingsFragment;
+import com.smartcitytraveller.mobile.ui.settings.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -64,7 +64,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     SharedPreferencesManager sharedPreferencesManager;
     ProfileDto profileDTO;
     String authentication;
-    private DashboardViewModel dashboardViewModel;
     private ProductViewModel productViewModel;
 
     ProductRecyclerAdapter productRecyclerAdapter;
@@ -77,7 +76,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
         productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -99,13 +97,8 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         View navHeaderView = navigationView.getHeaderView(0);
 
         Menu navMenu = navigationView.getMenu();
-        MenuItem becomeAnPaymateItem = navMenu.findItem(R.id.nav_new_products);
-
-        if (profileDTO.getPaymate() == null) {
-            becomeAnPaymateItem.setVisible(true);
-        } else {
-            becomeAnPaymateItem.setVisible(false);
-        }
+        MenuItem newProductsItem = navMenu.findItem(R.id.nav_new_products);
+        newProductsItem.setVisible(true);
 
         imageViewNavHeaderAvatar = navHeaderView.findViewById(R.id.image_view_nav_header_avatar);
         textViewNavHeaderFullName = navHeaderView.findViewById(R.id.text_view_nav_header_full_name);
@@ -272,7 +265,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void syncDisplay(ProfileDto profileDTO) {
         String firstName = profileDTO.getFirstName();
         String fullName = firstName + " " + profileDTO.getLastName();
-        String msisdn = (profileDTO.getPaymate() != null && profileDTO.getPaymate().getPaymateStatus().equals("ACTIVE")) ? "Paymate Code: " + profileDTO.getPaymate().getPaymateCode() : profileDTO.getMsisdn();
+        String msisdn = profileDTO.getMsisdn();
         Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
         Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewNavHeaderAvatar, profileDTO.getId());
         textViewFullName.setText(fullName);

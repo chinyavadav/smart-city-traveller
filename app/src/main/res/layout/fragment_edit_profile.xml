@@ -120,7 +120,7 @@
                 android:inputType="textEmailAddress" />
 
             <Button
-                android:id="@+id/button_next"
+                android:id="@+id/button_save_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"

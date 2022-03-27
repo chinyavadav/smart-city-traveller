@@ -18,7 +18,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.auth0.android.jwt.JWT;
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.siba.SibaProfile;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -135,13 +134,7 @@ public class Common {
         try {
             sharedPreferencesManager.clearAll();
             DbHandler dbHandler = new DbHandler(context);
-            dbHandler.deleteAllNotifications();
-            dbHandler.deleteAllBalances();
-            dbHandler.deleteAllTransactions();
-            dbHandler.deleteAllSibaProfiles();
-            dbHandler.deleteAllMySibaInvites();
-            dbHandler.deleteAllChatMessages();
-            dbHandler.deleteAllSupportMessages();
+            dbHandler.deleteAllProducts();
         } catch (Exception ignore) {
         }
     }
@@ -178,18 +171,6 @@ public class Common {
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(pattern);
         Date date = new Date(timestamp);
         return dateFormat.format(date);
-    }
-
-
-    public static SibaProfile getSibaProfileById(Context context, String sibaProfileId) {
-        DbHandler dbHandler = new DbHandler(context);
-        List<SibaProfile> sibaProfiles = dbHandler.getSibaProfiles();
-        for (SibaProfile sibaProfile : sibaProfiles) {
-            if (sibaProfile.getId().equals(sibaProfileId)) {
-                return sibaProfile;
-            }
-        }
-        return null;
     }
 
     public static String[] splitCountryCodeFromPhone(String phoneNumber) throws NumberParseException {

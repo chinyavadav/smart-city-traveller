@@ -116,7 +116,7 @@ public class PickProductImagesFragment extends Fragment {
         imageViewSecond.setOnClickListener(view1 -> pickImage(2));
 
 
-        buttonNext = view.findViewById(R.id.button_next);
+        buttonNext = view.findViewById(R.id.button_save_profile);
         buttonNext.setOnClickListener(v -> {
 
             if (imageFirst != null && !imageFirst.isEmpty()

@@ -25,8 +25,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.ui.old.deposit.WireDepositFragment;
-import com.smartcitytraveller.mobile.ui.old.transaction.TransactionStatusFragment;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -142,33 +140,6 @@ public class NavigationFragment extends Fragment {
     }
 
     private void handleUrl(WebView webView, String url, Map<String, String> headers) {
-        if (parentFragment.equals(WireDepositFragment.class.getSimpleName())) {
-            if (url.contains("/payfast/response/success")) {
-                Bundle bundle = new Bundle();
-                TransactionStatusFragment transactionStatusFragment = new TransactionStatusFragment();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                bundle.putBoolean("success", true);
-                bundle.putString("transactionStatusTitle", "Deposit Successful");
-                bundle.putString("transactionStatusMessage", "Deposit into profile was successful!");
-                transactionStatusFragment.setArguments(bundle);
-                transaction.replace(R.id.container, transactionStatusFragment, TransactionStatusFragment.class.getSimpleName());
-                transaction.commit();
-            } else if (url.contains("/payfast/response/cancel")) {
-                Bundle bundle = new Bundle();
-                TransactionStatusFragment transactionStatusFragment = new TransactionStatusFragment();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                bundle.putBoolean("success", false);
-                bundle.putString("transactionStatusTitle", "Deposit Failed");
-                bundle.putString("transactionStatusMessage", "Deposit into profile was not successful!");
-                transactionStatusFragment.setArguments(bundle);
-                transaction.replace(R.id.container, transactionStatusFragment, TransactionStatusFragment.class.getSimpleName());
-                transaction.commit();
-            }
-        }
-        if (url.contains("emalyami.com")) {
-            webView.loadUrl(url, headers);
-        } else {
-            webView.loadUrl(url);
-        }
+
     }
 }

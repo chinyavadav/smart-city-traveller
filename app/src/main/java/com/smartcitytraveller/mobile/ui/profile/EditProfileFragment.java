@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -25,7 +24,6 @@ import com.smartcitytraveller.mobile.api.dto.UpdateProfileRequest;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
-import com.smartcitytraveller.mobile.common.Sex;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
@@ -44,11 +42,10 @@ public class EditProfileFragment extends Fragment {
     ImageView imageViewBack, imageViewProfileAvatar;
 
     EditText editTextFirstName, editTextLastName, editTextEmail;
-    Button buttonUpdateProfile;
+    Button buttonSaveProfile;
 
     @SuppressLint("SimpleDateFormat")
     SimpleDateFormat shortDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-    boolean dobPickerActive = false;
 
     FragmentManager fragmentManager;
     private ProfileDetailsViewModel profileDetailsViewModel;
@@ -79,8 +76,6 @@ public class EditProfileFragment extends Fragment {
         String firstName = profileDTO.getFirstName();
         String lastName = profileDTO.getLastName();
         String email = profileDTO.getEmail();
-        Date dob = profileDTO.getDob();
-        Sex sex = profileDTO.getSex();
 
         editTextFirstName = view.findViewById(R.id.edit_text_first_name);
         editTextLastName = view.findViewById(R.id.edit_text_last_name);
@@ -108,22 +103,17 @@ public class EditProfileFragment extends Fragment {
         });
 
 
-        buttonUpdateProfile = view.findViewById(R.id.button_next);
-        buttonUpdateProfile.setOnClickListener(new View.OnClickListener() {
+        buttonSaveProfile = view.findViewById(R.id.button_save_profile);
+        buttonSaveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String firstName = editTextFirstName.getText().toString();
                 String lastName = editTextLastName.getText().toString();
                 String email = editTextEmail.getText().toString();
 
-                String oldDate = null;
-                if (profileDTO.getDob() != null) {
-                    oldDate = shortDateFormat.format(profileDTO.getDob());
-                }
-
                 if (firstName.length() > 1 && lastName.length() > 1 && email.length() > 1) {
-                    if (profileDTO != null && firstName.equals(profileDTO.getFirstName()) && lastName.equals(profileDTO.getLastName()) && email.equals(profileDTO.getEmail()) && dob.equals(oldDate)) {
-                        nextPage();
+                    if (profileDTO != null && firstName.equals(profileDTO.getFirstName()) && lastName.equals(profileDTO.getLastName()) && email.equals(profileDTO.getEmail())) {
+                        Snackbar.make(view, "No changes detected!", Snackbar.LENGTH_LONG).show();
                     } else {
                         UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(email, firstName, lastName);
                         pd.setMessage("Updating ...");
@@ -134,7 +124,7 @@ public class EditProfileFragment extends Fragment {
                                 pd.dismiss();
                                 switch (responseDTO.getStatus()) {
                                     case "success":
-                                        nextPage();
+                                        Snackbar.make(view, "Successfully updated profile!", Snackbar.LENGTH_LONG).show();
                                         break;
                                     case "failed":
                                     case "error":
@@ -155,13 +145,5 @@ public class EditProfileFragment extends Fragment {
                 }
             }
         });
-    }
-
-    public void nextPage() {
-        EditProfileIdentificationFragment editProfileIdentificationFragment = new EditProfileIdentificationFragment();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, editProfileIdentificationFragment, EditProfileIdentificationFragment.class.getSimpleName());
-        transaction.addToBackStack(TAG);
-        transaction.commit();
     }
 }

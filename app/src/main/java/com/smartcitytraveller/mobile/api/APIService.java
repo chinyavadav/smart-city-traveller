@@ -4,35 +4,15 @@ import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
 import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.BalanceDTO;
-import com.smartcitytraveller.mobile.api.dto.BankDto;
 import com.smartcitytraveller.mobile.api.dto.ChangePasswordRequest;
-import com.smartcitytraveller.mobile.api.dto.CheckProfileDTO;
-import com.smartcitytraveller.mobile.api.dto.CheckPaymateDTO;
-import com.smartcitytraveller.mobile.api.dto.PaymateApplication;
-import com.smartcitytraveller.mobile.api.dto.PaymateBusinessLocation;
-import com.smartcitytraveller.mobile.api.dto.SibaDepositDTO;
-import com.smartcitytraveller.mobile.api.dto.airtime.MobileTopupRequest;
-import com.smartcitytraveller.mobile.api.dto.airtime.OperatorResponse;
 import com.smartcitytraveller.mobile.api.dto.ResetPasswordRequest;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
 import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
-import com.smartcitytraveller.mobile.api.dto.Transaction;
 import com.smartcitytraveller.mobile.api.dto.UpdateProfileRequest;
-import com.smartcitytraveller.mobile.api.dto.UpdateAddressRequest;
-import com.smartcitytraveller.mobile.api.dto.UpdateIdentificationRequest;
-import com.smartcitytraveller.mobile.api.dto.ValidateOTPRequest;
-import com.smartcitytraveller.mobile.api.dto.payfast.CreatePayFastToken;
-import com.smartcitytraveller.mobile.api.dto.payfast.CreateTokenResponseDto;
-import com.smartcitytraveller.mobile.api.dto.siba.CreateSibaProfileDTO;
-import com.smartcitytraveller.mobile.api.dto.siba.SibaProfile;
-import com.smartcitytraveller.mobile.api.dto.siba.MySibaInvite;
-import com.smartcitytraveller.mobile.api.dto.transaction.TransactionDto;
 import com.smartcitytraveller.mobile.ui.product.ProductDto;
 
 import java.util.List;
-import java.util.UUID;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -87,19 +67,6 @@ public interface APIService {
     @POST("/api/v1/user/change-password")
     Call<ResponseDTO> changePassword(@Header("Authorization") String authentication, @Body ChangePasswordRequest changePasswordRequest);
 
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/user/verification")
-    Call<ResponseDTO> userVerificationOTP(@Header("Authorization") String authentication);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/user/verification")
-    Call<ResponseDTO> userVerification(@Header("Authorization") String authentication, @Body ValidateOTPRequest validateOTO);
-
     @Headers({
             "Accept: application/json"
     })
@@ -136,127 +103,4 @@ public interface APIService {
     })
     @PUT("/api/v1/profile")
     Call<ProfileDto> updateProfile(@Header("Authorization") String authentication, @Body UpdateProfileRequest updateProfileRequest);
-
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @PUT("/api/v1/profile/address")
-    Call<ResponseDTO<ProfileDto>> updateAddress(@Header("Authorization") String authentication, @Body UpdateAddressRequest updateAddressRequest);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @PUT("/api/v1/profile/identification")
-    Call<ResponseDTO<ProfileDto>> updateIdentification(@Header("Authorization") String authentication, @Body UpdateIdentificationRequest updateIdentificationRequest);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @Multipart
-    @POST("/api/v1/profile/upload/{type}")
-    Call<ResponseDTO> uploadProfileDocuments(@Header("Authorization") String authentication, @Path("type") String type, @Part MultipartBody.Part document);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/profile/check/{msisdn}")
-    Call<ResponseDTO<CheckProfileDTO>> checkProfile(@Header("Authorization") String authentication, @Path("msisdn") String msisdn);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/transaction/process")
-    Call<TransactionDto> processTransaction(@Header("Authorization") String authentication, @Body TransactionDto transactionDto);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/transaction")
-    Call<ResponseDTO<List<Transaction>>> getTransactionHistory(@Header("Authorization") String authentication);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/transaction/banks/{msisdn}")
-    Call<ResponseDTO<List<BankDto>>> getBanks(@Header("Authorization") String authorization, @Path("msisdn") String msisdn);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/paymate/update-business-location")
-    Call<ResponseDTO<PaymateApplication>> updatePaymateBusinessLocation(@Header("Authorization") String authentication, @Body PaymateBusinessLocation paymateBusinessLocation);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/paymate/application")
-    Call<ResponseDTO<PaymateApplication>> getPaymateApplication(@Header("Authorization") String authentication);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @Multipart
-    @POST("/api/v1/paymate/upload-document/{documentType}")
-    Call<ResponseDTO<PaymateApplication>> uploadPaymateApplicationDocument(@Header("Authorization") String authentication, @Path("documentType") String documentType, @Part MultipartBody.Part document);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/paymate/check/{paymateCode}")
-    Call<ResponseDTO<CheckPaymateDTO>> checkPaymate(@Header("Authorization") String authentication, @Path("paymateCode") long paymateCode);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/airtime/operator/{phoneNumber}")
-    Call<ResponseDTO<OperatorResponse>> getMobileOperator(@Header("Authorization") String authentication, @Path("phoneNumber") String phoneNumber);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/airtime/topup")
-    Call<ResponseDTO<BalanceDTO>> mobileTopup(@Header("Authorization") String authorization, @Body MobileTopupRequest mobileTopupRequest);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/payfast/create-token")
-    Call<ResponseDTO<CreateTokenResponseDto>> createToken(@Header("Authorization") String authorization, @Body CreatePayFastToken createPayFastToken);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/siba/api/v1/profile/check-eligibility/{msisdn}")
-    Call<ResponseDTO> checkEligibility(@Header("Authorization") String authorization, @Path("msisdn") String msisdn);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/siba/api/v1/profile")
-    Call<ResponseDTO<SibaProfile>> createSibaProfile(@Header("Authorization") String authorization, @Body CreateSibaProfileDTO createSibaProfileDTO);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/siba/api/v1/profile/{profileId}/profiles")
-    Call<ResponseDTO<List<SibaProfile>>> getMySibaProfiles(@Header("Authorization") String authorization, @Path("profileId") UUID profileId);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/siba/api/v1/profile/{profileId}/invites")
-    Call<ResponseDTO<List<MySibaInvite>>> getMySibaInvites(@Header("Authorization") String authorization, @Path("profileId") UUID profileId);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/siba/api/v1/profile/{profileId}/invite/{inviteId}/{action}")
-    Call<ResponseDTO> actionInvite(@Header("Authorization") String authorization, @Path("profileId") UUID profileId, @Path("inviteId") String inviteId, @Path("action") String action);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/siba/api/v1/profile/{profileId}/deposit/{sibaProfileId}")
-    Call<ResponseDTO<BalanceDTO>> depositToSiba(@Header("Authorization") String authorization, @Path("profileId") UUID profileId, @Path("sibaProfileId") UUID sibaProfileId, @Body SibaDepositDTO sibaDepositDTO);
 }

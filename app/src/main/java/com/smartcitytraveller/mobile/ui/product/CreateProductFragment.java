@@ -110,7 +110,7 @@ public class CreateProductFragment extends Fragment {
         });
 
 
-        buttonNext = view.findViewById(R.id.button_next);
+        buttonNext = view.findViewById(R.id.button_save_profile);
         buttonNext.setOnClickListener(v -> {
             String category = editTextProductCategory.getText().toString();
             String name = editTextProductName.getText().toString();

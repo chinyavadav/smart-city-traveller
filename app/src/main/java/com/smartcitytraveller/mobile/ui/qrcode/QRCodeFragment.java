@@ -61,9 +61,6 @@ public class QRCodeFragment extends Fragment {
 
         Map<String, String> qrData = new HashMap<>();
         qrData.put("msisdn", profileDTO.getMsisdn());
-        if (profileDTO.getPaymate() != null && profileDTO.getPaymate().getPaymateStatus().equals("ACTIVE")) {
-            qrData.put("paymateCode", String.valueOf(profileDTO.getPaymate().getPaymateCode()));
-        }
         qrData.put("firstName", profileDTO.getFirstName());
         qrData.put("lastName", profileDTO.getLastName());
         String contents = new Gson().toJson(qrData);

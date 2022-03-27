@@ -20,7 +20,6 @@ import com.smartcitytraveller.mobile.api.dto.ProfileDto;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.FirestoreHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.ui.old.notification.NotificationDTO;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -57,7 +56,6 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
             // directly as below.
             try {
                 DbHandler dbHandler = new DbHandler(getBaseContext());
-                dbHandler.insertNotification(new NotificationDTO(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getSentTime()));
             } catch (Exception e) {
                 Log.d(TAG, e.getMessage());
             }

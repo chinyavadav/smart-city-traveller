@@ -1,6 +1,5 @@
-package com.smartcitytraveller.mobile.ui.initial.signup;
+package com.smartcitytraveller.mobile.ui.settings;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -8,48 +7,33 @@ import androidx.lifecycle.ViewModel;
 
 import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
-import com.smartcitytraveller.mobile.database.DbHandler;
-import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
-import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
-import com.smartcitytraveller.mobile.api.dto.JWT;
+import com.smartcitytraveller.mobile.api.dto.ChangePasswordRequest;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpViewModel extends ViewModel {
-    private static final String TAG = SignUpViewModel.class.getSimpleName();
-
+public class SettingsViewModel extends ViewModel {
+    private static final String TAG = SettingsViewModel.class.getSimpleName();
     private MutableLiveData<ResponseDTO> responseLiveData;
     private final APIService apiService = new RestClients().get();
 
-    public MutableLiveData<ResponseDTO> hitSignUpApi(final Context context, SignUpRequest signUpRequest) {
+    public MutableLiveData<ResponseDTO> hitChangePasswordApi(String authentication, ChangePasswordRequest changePasswordRequest) {
         responseLiveData = new MutableLiveData<>();
-        Call<AuthResponseDto> ul = apiService.signUp(signUpRequest);
+        Call<ResponseDTO> ul = apiService.changePassword(authentication, changePasswordRequest);
         try {
-            ul.enqueue(new Callback<AuthResponseDto>() {
+            ul.enqueue(new Callback<ResponseDTO>() {
                 @Override
-                public void onResponse(Call<AuthResponseDto> call, Response<AuthResponseDto> response) {
+                public void onResponse(Call<ResponseDTO> call, Response<ResponseDTO> response) {
                     if (response.code() == 200) {
-                        AuthResponseDto authResponseDto = response.body();
-
-                        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
-                        JWT jwt = authResponseDto.getJwt();
-                        sharedPreferencesManager.setJWT(jwt);
-
-                        ProfileDto profileDTO = authResponseDto.getProfile();
-                        sharedPreferencesManager.setProfile(profileDTO);
-
-                        responseLiveData.setValue(new ResponseDTO("success", null, null));
+                        ResponseDTO responseDTO = response.body();
+                        responseLiveData.setValue(new ResponseDTO("success", responseDTO.getMessage(), null));
                     } else {
                         String errorMsg;
                         try {
@@ -64,7 +48,7 @@ public class SignUpViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(Call<AuthResponseDto> call, Throwable t) {
+                public void onFailure(Call<ResponseDTO> call, Throwable t) {
                     Log.d("error", t.toString());
                     responseLiveData.setValue(new ResponseDTO("error", "Connectivity Issues!", null));
                 }
@@ -76,4 +60,3 @@ public class SignUpViewModel extends ViewModel {
         }
     }
 }
-

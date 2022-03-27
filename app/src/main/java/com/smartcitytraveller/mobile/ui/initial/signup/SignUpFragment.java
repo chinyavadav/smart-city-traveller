@@ -29,7 +29,7 @@ import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.ui.profile.EditProfileAddressFragment;
+import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -104,7 +104,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        buttonSignUp = view.findViewById(R.id.button_next);
+        buttonSignUp = view.findViewById(R.id.button_save_profile);
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,9 +161,9 @@ public class SignUpFragment extends Fragment {
                 switch (responseDTO.getStatus()) {
                     case "success":
                         Common.subscribeToTopic(Constants.GENERAL_TOPIC);
-                        EditProfileAddressFragment editProfileAddressFragment = new EditProfileAddressFragment();
+                        DashboardFragment dashboardFragment = new DashboardFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, editProfileAddressFragment, EditProfileAddressFragment.class.getSimpleName());
+                        transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
                         transaction.commit();
                         break;
                     case "failed":

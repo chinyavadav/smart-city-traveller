@@ -22,8 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.AddressResponse;
-import com.smartcitytraveller.mobile.api.dto.IdentificationResponse;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -130,7 +128,7 @@ public class ProfileDetailsFragment extends Fragment {
                 EditProfileFragment editProfileFragment = new EditProfileFragment();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.container, editProfileFragment, EditProfileFragment.class.getSimpleName());
-                transaction.addToBackStack(TAG);//pano
+                transaction.addToBackStack(TAG);
                 transaction.commit();
             }
         });
@@ -158,21 +156,6 @@ public class ProfileDetailsFragment extends Fragment {
         String fullName = firstName + " " + profileDTO.getLastName();
         String msisdn = profileDTO.getMsisdn();
         String email = profileDTO.getEmail();
-        Date dob = profileDTO.getDob();
-        String sex = (profileDTO.getSex() != null) ? profileDTO.getSex().getTitle() : null;
-        IdentificationResponse identificationResponse = profileDTO.getIdentification();
-        String identificationType = (identificationResponse != null && identificationResponse.getType() != null) ? identificationResponse.getType().getLabel() : "Passport or National ID";
-        String identificationNumber = (identificationResponse != null && identificationResponse.getNumber() != null) ? identificationResponse.getNumber() : null;
-        AddressResponse addressResponse = profileDTO.getAddress();
-        String address = null;
-        if (addressResponse != null) {
-            String addressLine1 = addressResponse.getAddressLine1();
-            String city = addressResponse.getCity();
-            String province = addressResponse.getProvince();
-            String country = addressResponse.getCountryCode();
-            address = addressLine1 + ", " + city + ", " + province + ", " + country;
-        }
-
         textViewFullName.setText(fullName);
         textViewPhoneNumber.setText(msisdn);
         textViewEmail.setText(email);
