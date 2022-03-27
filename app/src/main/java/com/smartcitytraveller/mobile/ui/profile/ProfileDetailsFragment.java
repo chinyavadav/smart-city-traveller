@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Base64;
@@ -24,27 +23,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.shivtechs.maplocationpicker.MapUtility;
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Date;
-import java.util.UUID;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,7 +101,7 @@ public class ProfileDetailsFragment extends Fragment {
         imageViewPlus = view.findViewById(R.id.adf_image_view_plus);
         imageViewPlus.setOnClickListener(v -> pickImage());
 
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
 
         textViewFullName = view.findViewById(R.id.text_view_full_name);
         textViewPhoneNumber = view.findViewById(R.id.text_view_phone_value);
@@ -139,7 +128,7 @@ public class ProfileDetailsFragment extends Fragment {
         super.onResume();
         UserDto userDTO = sharedPreferencesManager.getUser();
         populateFields(userDTO);
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
     }
 
     public void populateFields(UserDto userDTO) {
@@ -197,7 +186,7 @@ public class ProfileDetailsFragment extends Fragment {
             switch (responseDTO.getStatus()) {
                 case "success":
                     UserDto userDTO = sharedPreferencesManager.getUser();
-                    Common.loadAvatar(userDTO, imageViewProfileAvatar);
+                    Util.loadAvatar(userDTO, imageViewProfileAvatar);
                     Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
                     break;
                 case "failed":

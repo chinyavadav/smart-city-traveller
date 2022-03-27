@@ -1,5 +1,7 @@
 package com.smartcitytraveller.mobile.ui.profile;
 
+import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -43,15 +45,8 @@ public class ProfileDetailsViewModel extends ViewModel {
                         sharedPreferencesManager.setUser(userDTO);
                         responseLiveData.setValue(new ResponseDTO("success", "Profile Syncing Complete!", null));
                     } else {
-                        String errorMsg;
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            errorMsg = jObjError.getString("message");
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                            errorMsg = response.code() == 403 ? "Authentication Failed!" : "Error Occurred!";
-                        }
-                        responseLiveData.setValue(new ResponseDTO("failed", errorMsg, null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 
@@ -81,7 +76,8 @@ public class ProfileDetailsViewModel extends ViewModel {
                         sharedPreferencesManager.setUser(userDTO);
                         responseLiveData.setValue(new ResponseDTO("success", "Successfully Updated!", null));
                     } else {
-                        responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().toString(), null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 
@@ -111,11 +107,8 @@ public class ProfileDetailsViewModel extends ViewModel {
                         sharedPreferencesManager.setUser(userDto);
                         responseLiveData.setValue(new ResponseDTO("success", "Avatar successfully updated!", null));
                     } else {
-                        try {
-                            responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().string(), null));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 

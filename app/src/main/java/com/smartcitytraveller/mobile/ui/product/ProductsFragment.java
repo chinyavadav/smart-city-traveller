@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.material.snackbar.Snackbar;
@@ -71,7 +71,7 @@ public class ProductsFragment extends Fragment {
         imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());
 
         imageViewProfileAvatar = view.findViewById(R.id.ctf_image_view_profile_avatar);
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
 
         DbHandler dbHandler = new DbHandler(getContext());
         products = dbHandler.getProducts();

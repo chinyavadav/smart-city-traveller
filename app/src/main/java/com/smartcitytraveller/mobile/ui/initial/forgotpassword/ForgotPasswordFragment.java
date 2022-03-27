@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.google.android.material.snackbar.Snackbar;
 import com.hbb20.CountryCodePicker;
 import com.smartcitytraveller.mobile.ui.initial.signin.SignInFragment;
@@ -93,7 +93,7 @@ public class ForgotPasswordFragment extends Fragment {
                     resetPasswordViewModel.hitResetPasswordApi(msisdn).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
                         @Override
                         public void onChanged(ResponseDTO responseDTO) {
-                            Common.hideSoftKeyboard(getActivity());
+                            Util.hideSoftKeyboard(getActivity());
                             pd.dismiss();
                             switch (responseDTO.getStatus()) {
                                 case "success":

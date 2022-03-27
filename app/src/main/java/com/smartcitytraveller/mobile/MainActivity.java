@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.smartcitytraveller.mobile.ui.initial.splashscreen.SplashScreenFragment;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreferencesManager = new SharedPreferencesManager(this);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (Common.isSessionValid(sharedPreferencesManager)) {
+        if (Util.isSessionValid(sharedPreferencesManager)) {
             userDTO = sharedPreferencesManager.getUser();
             DashboardFragment dashboardFragment = new DashboardFragment();
             transaction.add(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());

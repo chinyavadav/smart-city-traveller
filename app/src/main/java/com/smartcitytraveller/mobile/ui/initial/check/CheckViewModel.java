@@ -1,5 +1,7 @@
 package com.smartcitytraveller.mobile.ui.initial.check;
 
+import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -43,15 +45,8 @@ public class CheckViewModel extends ViewModel {
 
                         responseLiveData.setValue(new ResponseDTO("success", null, null));
                     } else {
-                        String errorMsg;
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            errorMsg = jObjError.getString("message");
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                            errorMsg = response.code() == 403 ? "Authentication Failed!" : "Error Occurred!";
-                        }
-                        responseLiveData.setValue(new ResponseDTO("failed", errorMsg, null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 

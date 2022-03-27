@@ -25,7 +25,7 @@ import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProductDto;
@@ -239,7 +239,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void logout() {
         pd.setMessage("Signing Out ...");
         pd.show();
-        Common.clearSessionData(sharedPreferencesManager, getContext());
+        Util.clearSessionData(sharedPreferencesManager, getContext());
         CheckFragment checkFragment = new CheckFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.container, checkFragment, CheckFragment.class.getSimpleName());
@@ -250,7 +250,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void syncDisplay(UserDto userDTO) {
         String fullName = userDTO.getFirstName() + " " + userDTO.getLastName();
         String msisdn = userDTO.getMsisdn();
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
         textViewFullName.setText(fullName);
         textViewNavHeaderFullName.setText(fullName);
         textViewMsisdn.setText(msisdn);

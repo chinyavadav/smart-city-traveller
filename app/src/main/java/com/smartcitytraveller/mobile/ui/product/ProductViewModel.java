@@ -1,5 +1,7 @@
 package com.smartcitytraveller.mobile.ui.product;
 
+import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -37,7 +39,8 @@ public class ProductViewModel extends ViewModel {
                         ProductDto new_productsDto = response.body();
                         responseLiveData.setValue(new ResponseDTO<>("success", "Successfully added new_products!", new_productsDto));
                     } else {
-                        responseLiveData.setValue(new ResponseDTO<>("failed", "Failed to add new_products", null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 
@@ -72,7 +75,8 @@ public class ProductViewModel extends ViewModel {
                         }
                         responseLiveData.setValue(new ResponseDTO<>("success", "Sync Complete", products));
                     } else {
-                        responseLiveData.setValue(new ResponseDTO<>("failed", "Failed to sync Products", null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 

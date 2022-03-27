@@ -27,15 +27,13 @@ import android.widget.Toast;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.snackbar.Snackbar;
 import com.shivtechs.maplocationpicker.LocationPickerActivity;
 import com.shivtechs.maplocationpicker.MapUtility;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -98,7 +96,7 @@ public class PickProductImagesFragment extends Fragment {
         UserDto userDTO = sharedPreferencesManager.getUser();
 
         imageViewProfileAvatar = view.findViewById(R.id.circular_image_view_avatar);
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
 
         imageViewBack = view.findViewById(R.id.image_view_back);
         imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());

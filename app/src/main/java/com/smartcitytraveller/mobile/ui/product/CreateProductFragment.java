@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.ProductConstants;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -73,7 +73,7 @@ public class CreateProductFragment extends Fragment {
         editTextProductPrice = view.findViewById(R.id.edit_text_product_price);
 
         imageViewProfileAvatar = view.findViewById(R.id.circular_image_view_avatar);
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
 
         imageViewBack = view.findViewById(R.id.image_view_back);
         imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());

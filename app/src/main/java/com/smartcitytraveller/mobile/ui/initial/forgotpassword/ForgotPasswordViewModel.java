@@ -9,8 +9,6 @@ import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 
-import java.io.IOException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,22 +25,13 @@ public class ForgotPasswordViewModel extends ViewModel {
             ul.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    if (response.code() == 200) {
-                        String message = response.body();
-                        responseLiveData.setValue(new ResponseDTO("success", message, null));
-                    } else {
-                        try {
-                            responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().string(), null));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                    String message = response.body();
+                    responseLiveData.setValue(new ResponseDTO("success", message, null));
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-                    Log.d("error", t.toString());
-                    responseLiveData.setValue(new ResponseDTO("error", "Connectivity Issues!", null));
+                    responseLiveData.setValue(new ResponseDTO("error", t.toString(), null));
                 }
             });
         } catch (Exception e) {

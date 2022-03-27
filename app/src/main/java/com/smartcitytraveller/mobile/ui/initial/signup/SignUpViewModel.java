@@ -1,5 +1,7 @@
 package com.smartcitytraveller.mobile.ui.initial.signup;
 
+import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -14,9 +16,6 @@ import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
 import com.smartcitytraveller.mobile.api.dto.JWT;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -49,15 +48,8 @@ public class SignUpViewModel extends ViewModel {
 
                         responseLiveData.setValue(new ResponseDTO("success", null, null));
                     } else {
-                        String errorMsg;
-                        try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            errorMsg = jObjError.getString("message");
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                            errorMsg = response.code() == 403 ? "Authentication Failed!" : "Error Occurred!";
-                        }
-                        responseLiveData.setValue(new ResponseDTO("failed", errorMsg, null));
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 

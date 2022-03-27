@@ -19,7 +19,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
 import com.auth0.android.jwt.JWT;
-import com.smartcitytraveller.mobile.R;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -31,7 +32,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.zxing.BarcodeFormat;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,11 +41,11 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
-public class Common {
-    private static final String TAG = Common.class.getSimpleName();
+import retrofit2.Response;
+
+public class Util {
+    private static final String TAG = Util.class.getSimpleName();
 
     public static void hideSoftKeyboard(Activity activity) {
         try {
@@ -168,4 +168,17 @@ public class Common {
         Phonenumber.PhoneNumber phone = phoneNumberUtil.parse(phoneNumber, Phonenumber.PhoneNumber.CountryCodeSource.UNSPECIFIED.name());
         return new String[]{"+" + phone.getCountryCode(), String.valueOf(phone.getNationalNumber())};
     }
+
+
+    public static String handleHttpException(Response response) {
+        try {
+            String json = response.errorBody().string();
+            JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
+            return jsonObject.get("message").getAsString();
+        } catch (IOException e) {
+            Log.d(TAG, "Exception: ", e);
+            return "Something went wrong!";
+        }
+    }
+
 }

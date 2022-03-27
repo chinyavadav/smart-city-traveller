@@ -1,5 +1,7 @@
 package com.smartcitytraveller.mobile.ui.settings;
 
+import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -39,11 +41,8 @@ public class SettingsViewModel extends ViewModel {
                         sharedPreferencesManager.setUser(userDTO);
                         responseLiveData.setValue(new ResponseDTO("success", "Successfully updated password", null));
                     } else {
-                        try {
-                            responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().string(), null));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        String responseMessage = handleHttpException(response);
+                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
                     }
                 }
 

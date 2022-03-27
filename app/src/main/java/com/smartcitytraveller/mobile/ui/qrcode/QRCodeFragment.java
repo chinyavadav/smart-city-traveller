@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.gson.Gson;
 
@@ -65,9 +65,9 @@ public class QRCodeFragment extends Fragment {
         qrData.put("lastName", userDTO.getLastName());
         String contents = new Gson().toJson(qrData);
 
-        Bitmap bitmap = Common.generateQRCode(contents);
+        Bitmap bitmap = Util.generateQRCode(contents);
         imageViewQRCode.setImageBitmap(bitmap);
-        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        Util.loadAvatar(userDTO, imageViewProfileAvatar);
         String fullName = userDTO.getFirstName() + " " + userDTO.getLastName();
         textViewProfileFullName.setText(fullName);
 

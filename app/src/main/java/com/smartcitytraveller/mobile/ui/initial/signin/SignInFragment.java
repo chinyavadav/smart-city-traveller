@@ -26,7 +26,7 @@ import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
-import com.smartcitytraveller.mobile.common.Common;
+import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
@@ -149,7 +149,7 @@ public class SignInFragment extends Fragment {
         textViewChangePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Common.clearSessionData(sharedPreferencesManager, getContext());
+                Util.clearSessionData(sharedPreferencesManager, getContext());
                 fragmentManager.popBackStack();
                 Fragment authorizeFragment = fragmentManager.findFragmentByTag(CheckFragment.class.getSimpleName());
                 if (authorizeFragment == null) {
@@ -168,7 +168,7 @@ public class SignInFragment extends Fragment {
             public void onChanged(ResponseDTO responseDTO) {
                 switch (responseDTO.getStatus()) {
                     case "success":
-                        Common.subscribeToTopic(Constants.GENERAL_TOPIC);
+                        Util.subscribeToTopic(Constants.GENERAL_TOPIC);
                         DashboardFragment dashboardFragment = new DashboardFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
