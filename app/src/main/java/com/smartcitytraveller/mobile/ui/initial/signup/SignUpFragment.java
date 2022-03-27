@@ -46,7 +46,7 @@ public class SignUpFragment extends Fragment {
     EditText editTextFirstName, editTextLastName, editTextEmail, editTextPassword;
     Button buttonSignUp;
 
-    String phoneNumber;
+    String msisdn;
     boolean passwordShow = false;
 
     SharedPreferencesManager sharedPreferencesManager;
@@ -73,35 +73,32 @@ public class SignUpFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         CheckResponseDto checkResponseDto = sharedPreferencesManager.getAuthorization();
-        phoneNumber = checkResponseDto.getMsisdn();
+        msisdn = checkResponseDto.getMsisdn();
 
         textViewPhoneNumber = view.findViewById(R.id.text_view_phone_number);
-        textViewPhoneNumber.setText(phoneNumber);
+        textViewPhoneNumber.setText(msisdn);
         editTextFirstName = view.findViewById(R.id.edit_text_first_name);
         editTextLastName = view.findViewById(R.id.edit_text_last_name);
         editTextEmail = view.findViewById(R.id.edit_text_email);
 
         editTextPassword = view.findViewById(R.id.edit_text_password);
-        editTextPassword.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_RIGHT = 2;
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editTextPassword.getRight() - editTextPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (!passwordShow) {
-                            editTextPassword.setTransformationMethod(null);
-                            editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility_off, 0);
-                            passwordShow = true;
-                        } else {
-                            editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
-                            editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility, 0);
-                            passwordShow = false;
-                        }
-                        return passwordShow;
+        editTextPassword.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (editTextPassword.getRight() - editTextPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (!passwordShow) {
+                        editTextPassword.setTransformationMethod(null);
+                        editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility_off, 0);
+                        passwordShow = true;
+                    } else {
+                        editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+                        editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility, 0);
+                        passwordShow = false;
                     }
+                    return passwordShow;
                 }
-                return false;
             }
+            return false;
         });
 
         buttonSignUp = view.findViewById(R.id.button_save_profile);
@@ -117,13 +114,22 @@ public class SignUpFragment extends Fragment {
                     pd.setMessage("Please Wait ...");
                     pd.show();
                     FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                        String fcm_token = null;
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                        } else {
-                            fcm_token = task.getResult();
-                        }
-                        signUp(firstName, lastName, email, phoneNumber, password, fcm_token);
+                        signUpViewModel.hitSignUpApi(getActivity(), new SignUpRequest(msisdn, email, firstName, lastName, password)).observe(getViewLifecycleOwner(), responseDTO -> {
+                            pd.dismiss();
+                            switch (responseDTO.getStatus()) {
+                                case "success":
+                                    Util.subscribeToTopic(Constants.GENERAL_TOPIC);
+                                    DashboardFragment dashboardFragment = new DashboardFragment();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
+                                    transaction.commit();
+                                    break;
+                                case "failed":
+                                case "error":
+                                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    break;
+                            }
+                        });
                     });
                 } else {
                     if (firstName.length() == 0) {
@@ -152,27 +158,4 @@ public class SignUpFragment extends Fragment {
             transaction.commit();
         });
     }
-
-    public void signUp(String firstName, String lastName, String email, String msisdn, String password, String fcm_token) {
-        signUpViewModel.hitSignUpApi(getActivity(), new SignUpRequest(firstName, lastName, email, msisdn, password, fcm_token)).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-            @Override
-            public void onChanged(ResponseDTO responseDTO) {
-                pd.dismiss();
-                switch (responseDTO.getStatus()) {
-                    case "success":
-                        Util.subscribeToTopic(Constants.GENERAL_TOPIC);
-                        DashboardFragment dashboardFragment = new DashboardFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
-                        transaction.commit();
-                        break;
-                    case "failed":
-                    case "error":
-                        Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-    }
-
 }

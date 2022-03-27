@@ -1,6 +1,5 @@
 package com.smartcitytraveller.mobile.api.dto;
 
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 public class UserDto {
@@ -11,8 +10,8 @@ public class UserDto {
     private String lastName;
     private String avatar;
     private String password;
-    private ZonedDateTime created;
-    private ZonedDateTime updated;
+    private String created;
+    private String updated;
 
     public UUID getId() {
         return id;
@@ -70,19 +69,19 @@ public class UserDto {
         this.password = password;
     }
 
-    public ZonedDateTime getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(ZonedDateTime created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
-    public ZonedDateTime getUpdated() {
+    public String getUpdated() {
         return updated;
     }
 
-    public void setUpdated(ZonedDateTime updated) {
+    public void setUpdated(String updated) {
         this.updated = updated;
     }
 }

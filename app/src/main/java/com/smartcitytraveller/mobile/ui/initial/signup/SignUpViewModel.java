@@ -40,11 +40,8 @@ public class SignUpViewModel extends ViewModel {
                         AuthResponseDto authResponseDto = response.body();
 
                         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
-                        JWT jwt = authResponseDto.getJwt();
-                        sharedPreferencesManager.setJWT(jwt);
-
-                        UserDto userDTO = authResponseDto.getUser();
-                        sharedPreferencesManager.setUser(userDTO);
+                        sharedPreferencesManager.setJWT(authResponseDto.getJwt());
+                        sharedPreferencesManager.setUser(authResponseDto.getUser());
 
                         responseLiveData.setValue(new ResponseDTO("success", null, null));
                     } else {

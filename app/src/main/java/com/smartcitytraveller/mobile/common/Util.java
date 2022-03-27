@@ -174,11 +174,13 @@ public class Util {
         try {
             String json = response.errorBody().string();
             JsonObject jsonObject = new Gson().fromJson(json, JsonObject.class);
-            return jsonObject.get("message").getAsString();
+            if (jsonObject.get("error") != null) {
+                return jsonObject.get("error").getAsString();
+            }
         } catch (IOException e) {
             Log.d(TAG, "Exception: ", e);
-            return "Something went wrong!";
         }
+        return "Something went wrong!";
     }
 
 }

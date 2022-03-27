@@ -5,6 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class SignUpRequest {
 
+    @SerializedName("msisdn")
+    @Expose
+    private String msisdn;
+
+    @SerializedName("email")
+    @Expose
+    private String email;
+
     @SerializedName("firstName")
     @Expose
     private String firstName;
@@ -13,29 +21,56 @@ public class SignUpRequest {
     @Expose
     private String lastName;
 
-    @SerializedName("email")
-    @Expose
-    private String email;
-
-    @SerializedName("msisdn")
-    @Expose
-    private String msisdn;
-
     @SerializedName("password")
     @Expose
     private String password;
 
-    @SerializedName("fcmToken")
-    @Expose
-    private String fcmToken;
-
-    public SignUpRequest(String firstName, String lastName, String email, String msisdn, String password, String fcmToken) {
+    public SignUpRequest(String msisdn, String email, String firstName, String lastName, String password) {
+        this.msisdn = msisdn;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.msisdn = msisdn;
         this.password = password;
-        this.fcmToken = fcmToken;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
 
