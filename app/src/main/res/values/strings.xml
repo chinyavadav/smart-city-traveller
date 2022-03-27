@@ -69,4 +69,6 @@
     <string name="next_of_kin">Next of Kin</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="relationship">Relationship</string>
+    <string name="mobile_number">Mobile Number</string>
 </resources>

@@ -17,11 +17,6 @@ import com.smartcitytraveller.mobile.api.dto.JWT;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +44,7 @@ public class SignInViewModel extends ViewModel {
                         UserDto userDTO = authResponseDto.getUser();
                         sharedPreferencesManager.setUser(userDTO);
 
-                        responseLiveData.setValue(new ResponseDTO("success", null, null));
+                        responseLiveData.setValue(new ResponseDTO("success", null, userDTO));
                     } else {
                         String responseMessage = handleHttpException(response);
                         responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));

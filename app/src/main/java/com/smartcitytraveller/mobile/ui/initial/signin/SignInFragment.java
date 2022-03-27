@@ -26,6 +26,7 @@ import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -36,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,7 +51,7 @@ public class SignInFragment extends Fragment {
     Button buttonSignIn;
     ProgressDialog pd;
 
-    private String phoneNumber;
+    private String msisdn;
     boolean passwordShow = false;
 
     FragmentManager fragmentManager;
@@ -76,32 +78,29 @@ public class SignInFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         CheckResponseDto checkResponseDto = sharedPreferencesManager.getAuthorization();
-        phoneNumber = checkResponseDto.getMsisdn();
+        msisdn = checkResponseDto.getMsisdn();
 
 
         textViewPhoneNumber = view.findViewById(R.id.text_view_phone_number);
-        textViewPhoneNumber.setText(phoneNumber);
+        textViewPhoneNumber.setText(msisdn);
         editTextPassword = view.findViewById(R.id.edit_text_password);
-        editTextPassword.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_RIGHT = 2;
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editTextPassword.getRight() - editTextPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        if (!passwordShow) {
-                            editTextPassword.setTransformationMethod(null);
-                            editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility_off, 0);
-                            passwordShow = true;
-                        } else {
-                            editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
-                            editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility, 0);
-                            passwordShow = false;
-                        }
-                        return passwordShow;
+        editTextPassword.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_RIGHT = 2;
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (editTextPassword.getRight() - editTextPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (!passwordShow) {
+                        editTextPassword.setTransformationMethod(null);
+                        editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility_off, 0);
+                        passwordShow = true;
+                    } else {
+                        editTextPassword.setTransformationMethod(new PasswordTransformationMethod());
+                        editTextPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.visibility, 0);
+                        passwordShow = false;
                     }
+                    return passwordShow;
                 }
-                return false;
             }
+            return false;
         });
 
 
@@ -125,19 +124,28 @@ public class SignInFragment extends Fragment {
                 if (password.length() != 0) {
                     pd.setMessage("Authenticating ...");
                     pd.show();
-
-                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-                        @Override
-                        public void onComplete(@NonNull Task<String> task) {
-                            String fcm_token = null;
-                            if (!task.isSuccessful()) {
-                                Log.w(TAG, "Fetching FCM registration token failed", task.getException());
-                                pd.dismiss();
-                            } else {
-                                fcm_token = task.getResult();
-                            }
-                            signIn(view, phoneNumber, password, fcm_token);
+                    signInViewModel.hitSignInApi(getActivity(), new SignInRequest(msisdn, password)).observe(getViewLifecycleOwner(), responseDTO -> {
+                        switch (responseDTO.getStatus()) {
+                            case "success":
+                                UserDto userDto = (UserDto) responseDTO.getData();
+                                if (userDto.getNextOfKin() == null) {
+                                    NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.container, nextOfKinFragment, NextOfKinFragment.class.getSimpleName());
+                                    transaction.commit();
+                                } else {
+                                    DashboardFragment dashboardFragment = new DashboardFragment();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
+                                    transaction.commit();
+                                }
+                                break;
+                            case "failed":
+                            case "error":
+                                Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                                break;
                         }
+                        pd.dismiss();
                     });
                 } else {
                     Snackbar.make(view, "Enter Password!", Snackbar.LENGTH_LONG).show();
@@ -158,28 +166,6 @@ public class SignInFragment extends Fragment {
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.container, authorizeFragment, CheckFragment.class.getSimpleName());
                 transaction.commit();
-            }
-        });
-    }
-
-    public void signIn(View view, String msisdn, String password, String fcm_token) {
-        signInViewModel.hitSignInApi(getActivity(), new SignInRequest(msisdn, password, fcm_token)).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-            @Override
-            public void onChanged(ResponseDTO responseDTO) {
-                switch (responseDTO.getStatus()) {
-                    case "success":
-                        Util.subscribeToTopic(Constants.GENERAL_TOPIC);
-                        DashboardFragment dashboardFragment = new DashboardFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
-                        transaction.commit();
-                        break;
-                    case "failed":
-                    case "error":
-                        Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                        break;
-                }
-                pd.dismiss();
             }
         });
     }

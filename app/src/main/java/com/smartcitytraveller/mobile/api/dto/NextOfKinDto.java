@@ -2,15 +2,12 @@ package com.smartcitytraveller.mobile.api.dto;
 
 import java.util.UUID;
 
-public class UserDto {
+public class NextOfKinDto {
     private UUID id;
     private String msisdn;
     private String email;
     private String firstName;
     private String lastName;
-    private String avatar;
-    private String password;
-    private NextOfKinDto nextOfKin;
     private String created;
     private String updated;
 
@@ -52,30 +49,6 @@ public class UserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public NextOfKinDto getNextOfKin() {
-        return nextOfKin;
-    }
-
-    public void setNextOfKin(NextOfKinDto nextOfKin) {
-        this.nextOfKin = nextOfKin;
     }
 
     public String getCreated() {

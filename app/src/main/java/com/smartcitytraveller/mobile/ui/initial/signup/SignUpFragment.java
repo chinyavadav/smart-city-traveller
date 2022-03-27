@@ -24,15 +24,14 @@ import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,45 +101,46 @@ public class SignUpFragment extends Fragment {
         });
 
         buttonSignUp = view.findViewById(R.id.button_save_profile);
-        buttonSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String firstName = editTextFirstName.getText().toString().trim();
-                String lastName = editTextLastName.getText().toString().trim();
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                // TODO validations pwd>=8 email
-                if (firstName.length() > 2 && lastName.length() > 2 && email.length() != 0 && password.length() >= 8) {
-                    pd.setMessage("Please Wait ...");
-                    pd.show();
-                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
-                        signUpViewModel.hitSignUpApi(getActivity(), new SignUpRequest(msisdn, email, firstName, lastName, password)).observe(getViewLifecycleOwner(), responseDTO -> {
-                            pd.dismiss();
-                            switch (responseDTO.getStatus()) {
-                                case "success":
-                                    Util.subscribeToTopic(Constants.GENERAL_TOPIC);
-                                    DashboardFragment dashboardFragment = new DashboardFragment();
-                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                    transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
-                                    transaction.commit();
-                                    break;
-                                case "failed":
-                                case "error":
-                                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                                    break;
+        buttonSignUp.setOnClickListener(v -> {
+            String firstName = editTextFirstName.getText().toString().trim();
+            String lastName = editTextLastName.getText().toString().trim();
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            if (firstName.length() > 2 && lastName.length() > 2 && email.length() != 0 && password.length() >= 8) {
+                pd.setMessage("Please Wait ...");
+                pd.show();
+                signUpViewModel.hitSignUpApi(getActivity(), new SignUpRequest(msisdn, email, firstName, lastName, password)).observe(getViewLifecycleOwner(), responseDTO -> {
+                    pd.dismiss();
+                    switch (responseDTO.getStatus()) {
+                        case "success":
+                            UserDto userDto = (UserDto) responseDTO.getData();
+                            if (userDto.getNextOfKin() == null) {
+                                NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.replace(R.id.container, nextOfKinFragment, NextOfKinFragment.class.getSimpleName());
+                                transaction.commit();
+                            } else {
+                                DashboardFragment dashboardFragment = new DashboardFragment();
+                                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                transaction.replace(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
+                                transaction.commit();
                             }
-                        });
-                    });
-                } else {
-                    if (firstName.length() == 0) {
-                        Snackbar.make(view, "Enter First Name!", Snackbar.LENGTH_LONG).show();
-                    } else if (lastName.length() == 0) {
-                        Snackbar.make(view, "Enter Last Name!", Snackbar.LENGTH_LONG).show();
-                    } else if (email.length() == 0) {
-                        Snackbar.make(view, "Enter valid Email!", Snackbar.LENGTH_LONG).show();
-                    } else if (password.length() < 8) {
-                        Snackbar.make(view, "Password should have at least 8 characters!", Snackbar.LENGTH_LONG).show();
+                            break;
+                        case "failed":
+                        case "error":
+                            Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                            break;
                     }
+                });
+            } else {
+                if (firstName.length() == 0) {
+                    Snackbar.make(view, "Enter First Name!", Snackbar.LENGTH_LONG).show();
+                } else if (lastName.length() == 0) {
+                    Snackbar.make(view, "Enter Last Name!", Snackbar.LENGTH_LONG).show();
+                } else if (email.length() == 0) {
+                    Snackbar.make(view, "Enter valid Email!", Snackbar.LENGTH_LONG).show();
+                } else if (password.length() < 8) {
+                    Snackbar.make(view, "Password should have at least 8 characters!", Snackbar.LENGTH_LONG).show();
                 }
             }
         });

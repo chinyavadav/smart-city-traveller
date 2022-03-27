@@ -7,7 +7,7 @@
     android:background="@color/white_smoke"
     android:clickable="true"
     android:focusable="true"
-    tools:context=".ui.product.CreateProductFragment">
+    tools:context=".ui.panic.NextOfKinFragment">
 
     <LinearLayout
         android:id="@+id/linear_layout_navigation_header"
