@@ -1,4 +1,4 @@
-package com.smartcitytraveller.mobile.ui.resetpassword;
+package com.smartcitytraveller.mobile.ui.reset;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;

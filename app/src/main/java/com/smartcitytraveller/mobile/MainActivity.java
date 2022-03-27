@@ -2,14 +2,11 @@ package com.smartcitytraveller.mobile;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.amazon.geo.mapsv2.util.AmazonMapsRuntimeUtil;
-import com.amazon.geo.mapsv2.util.ConnectionResult;
 import com.smartcitytraveller.mobile.api.dto.ProfileDto;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -33,18 +30,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         pd = new ProgressDialog(this);
 
-        if (checkForAmazonMaps()) {
-            // Maps should be available. Code
-            // to get a reference to the map and proceed
-            // normally goes here...
-        } else {
-            int cr = AmazonMapsRuntimeUtil.isAmazonMapsRuntimeAvailable(this);
-            String msg = getString(R.string.map_not_available)
-                    + " ConnectionResult = " + cr;
-
-            Log.w(TAG, msg);
-        }
-
         sharedPreferencesManager = new SharedPreferencesManager(this);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (Common.isSessionValid(sharedPreferencesManager)) {
@@ -63,10 +48,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-    }
-
-    private boolean checkForAmazonMaps() {
-        return AmazonMapsRuntimeUtil
-                .isAmazonMapsRuntimeAvailable(this) == ConnectionResult.SUCCESS;
     }
 }

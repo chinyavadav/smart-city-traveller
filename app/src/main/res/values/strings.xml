@@ -61,4 +61,9 @@
     <string name="change_phone_number">Change Phone</string>
     <string name="product">Product</string>
     <string name="navigate">Navigate</string>
+    <string name="product_category">Category</string>
+    <string name="price">Price</string>
+    <string name="pick_pictures">Pick Pictures</string>
+    <string name="categories">Categories</string>
+    <string name="share_location">Share Location</string>
 </resources>

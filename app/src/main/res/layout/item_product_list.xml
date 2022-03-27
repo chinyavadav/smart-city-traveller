@@ -31,7 +31,7 @@
             android:id="@+id/text_view_product_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dummy_transaction_status_message" />
+            android:text="@string/description" />
 
         <TextView
             android:id="@+id/text_view_created"

@@ -30,7 +30,7 @@ import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
-import com.smartcitytraveller.mobile.ui.resetpassword.ForgotPasswordFragment;
+import com.smartcitytraveller.mobile.ui.reset.ForgotPasswordFragment;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
