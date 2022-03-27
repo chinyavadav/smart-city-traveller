@@ -1,6 +1,5 @@
-package com.smartcitytraveller.mobile.ui.settings;
+package com.smartcitytraveller.mobile.ui.initial.forgotpassword;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -9,11 +8,6 @@ import androidx.lifecycle.ViewModel;
 import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -21,23 +15,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SettingsViewModel extends ViewModel {
-    private static final String TAG = SettingsViewModel.class.getSimpleName();
+public class ForgotPasswordViewModel extends ViewModel {
+    private static final String TAG = ForgotPasswordViewModel.class.getSimpleName();
     private MutableLiveData<ResponseDTO> responseLiveData;
     private final APIService apiService = new RestClients().get();
 
-    public MutableLiveData<ResponseDTO> hitChangePasswordApi(Context context, String authentication, UserDto userDto) {
+    public MutableLiveData<ResponseDTO> hitResetPasswordApi(String msisdn) {
         responseLiveData = new MutableLiveData<>();
-        Call<UserDto> ul = apiService.updateUser(authentication, userDto);
+        Call<String> ul = apiService.resetPassword(msisdn);
         try {
-            ul.enqueue(new Callback<UserDto>() {
+            ul.enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<UserDto> call, Response<UserDto> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     if (response.code() == 200) {
-                        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
-                        UserDto userDTO = response.body();
-                        sharedPreferencesManager.setUser(userDTO);
-                        responseLiveData.setValue(new ResponseDTO("success", "Successfully updated password", null));
+                        String message = response.body();
+                        responseLiveData.setValue(new ResponseDTO("success", message, null));
                     } else {
                         try {
                             responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().string(), null));
@@ -48,7 +40,7 @@ public class SettingsViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(Call<UserDto> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     Log.d("error", t.toString());
                     responseLiveData.setValue(new ResponseDTO("error", "Connectivity Issues!", null));
                 }

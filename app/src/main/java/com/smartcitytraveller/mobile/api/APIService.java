@@ -4,26 +4,20 @@ import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.ChangePasswordRequest;
-import com.smartcitytraveller.mobile.api.dto.ResetPasswordRequest;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
 import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
-import com.smartcitytraveller.mobile.ui.product.ProductDto;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 
 import java.util.List;
 import java.util.UUID;
 
-import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface APIService {
@@ -62,6 +56,12 @@ public interface APIService {
     @Headers({
             "Accept: application/json"
     })
+    @GET("/api/v1/user/reset-password/{msisdn}")
+    Call<String> resetPassword(@Path("msisdn") String msisdn);
+
+    @Headers({
+            "Accept: application/json"
+    })
     @POST("/api/v1/product")
     Call<ProductDto> createProduct(@Header("Authorization") String authentication, @Body CreateProductDto createProductDto);
 
@@ -71,36 +71,4 @@ public interface APIService {
     })
     @GET("/api/v1/product")
     Call<List<ProductDto>> getProducts(@Header("Authorization") String authentication);
-
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/user/change-password")
-    Call<ResponseDTO> changePassword(@Header("Authorization") String authentication, @Body ChangePasswordRequest changePasswordRequest);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/user/reset-password/{msisdn}")
-    Call<ResponseDTO> resetPassword(@Path("msisdn") String msisdn);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/user/reset-password/{msisdn}/{otp}")
-    Call<ResponseDTO> resetPassword(@Path("msisdn") String msisdn, @Path("otp") String otp);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @POST("/api/v1/user/reset-password")
-    Call<ResponseDTO> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @Multipart
-    @POST("/api/v1/user/profile-picture")
-    Call<ResponseDTO> uploadProfilePicture(@Header("Authorization") String authentication, @Part MultipartBody.Part profilePicture);
 }

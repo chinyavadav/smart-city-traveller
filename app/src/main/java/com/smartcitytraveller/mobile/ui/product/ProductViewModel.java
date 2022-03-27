@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
 import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.database.DbHandler;
 

@@ -20,12 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.ProductConstants;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -9,8 +9,6 @@ import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.api.dto.JWT;
 import com.google.gson.Gson;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -22,9 +20,6 @@ public class SharedPreferencesManager {
     private Context context;
     private final SharedPreferences.Editor editor;
     private Map<String, ?> sharedPreferences;
-    @SuppressLint("SimpleDateFormat")
-
-    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     @SuppressLint("CommitPrefEdits")
     public SharedPreferencesManager(Context context) {
@@ -63,11 +58,6 @@ public class SharedPreferencesManager {
             return String.format("%s %s", jwt.getTokenType(), jwt.getAccessToken());
         }
         return null;
-    }
-
-    public void setAvatarAvailable(boolean avatarAvailable) {
-        editor.putBoolean("avatarAvailable", avatarAvailable);
-        editor.apply();
     }
 
     public void setUser(UserDto userDTO) {

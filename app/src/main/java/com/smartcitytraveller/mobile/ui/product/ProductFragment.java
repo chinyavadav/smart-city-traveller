@@ -23,12 +23,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.

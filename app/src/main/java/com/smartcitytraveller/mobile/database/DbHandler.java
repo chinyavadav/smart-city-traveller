@@ -1,6 +1,5 @@
 package com.smartcitytraveller.mobile.database;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,18 +9,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.smartcitytraveller.mobile.database.contract.ProductContract;
-import com.smartcitytraveller.mobile.ui.product.ProductDto;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 public class DbHandler extends SQLiteOpenHelper {
     private static final String TAG = DbHandler.class.getSimpleName();
-    @SuppressLint("SimpleDateFormat")
-    private static final DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     private static final String DATABASE_NAME = "smart_city_traveller.db";
     // always update database version

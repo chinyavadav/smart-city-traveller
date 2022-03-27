@@ -3,6 +3,8 @@ package com.smartcitytraveller.mobile.ui.profile;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.shivtechs.maplocationpicker.MapUtility;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
@@ -31,7 +35,10 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.UUID;
 
@@ -52,9 +59,11 @@ public class ProfileDetailsFragment extends Fragment {
     ProgressDialog pd;
     TextView textViewFullName, textViewPhoneNumber, textViewEmail;
     Button buttonEditProfile;
-    String authentication;
-    SharedPreferencesManager sharedPreferencesManager;
 
+    UserDto userDTO;
+    String authentication;
+
+    SharedPreferencesManager sharedPreferencesManager;
     private ProfileDetailsViewModel profileDetailsViewModel;
 
     @Override
@@ -75,12 +84,11 @@ public class ProfileDetailsFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
 
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
-        UserDto userDTO = sharedPreferencesManager.getUser();
+        userDTO = sharedPreferencesManager.getUser();
         authentication = sharedPreferencesManager.getAuthenticationToken();
 
         long lastSync = sharedPreferencesManager.getLastSync();
         long now = new Date().getTime();
-        // 1 Second = 1000 Milliseconds, 300000 = 5 Minutes
         if (now - lastSync >= 300000) {
             pd.setMessage("Syncing Profile ...");
             pd.show();
@@ -102,12 +110,7 @@ public class ProfileDetailsFragment extends Fragment {
 
         imageViewProfileAvatar = view.findViewById(R.id.adf_image_view_profile_avatar);
         imageViewPlus = view.findViewById(R.id.adf_image_view_plus);
-        imageViewPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pickImage();
-            }
-        });
+        imageViewPlus.setOnClickListener(v -> pickImage());
 
         Common.loadAvatar(userDTO, imageViewProfileAvatar);
 
@@ -118,24 +121,16 @@ public class ProfileDetailsFragment extends Fragment {
         populateFields(userDTO);
 
         buttonEditProfile = view.findViewById(R.id.button_edit_profile);
-        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditProfileFragment editProfileFragment = new EditProfileFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.container, editProfileFragment, EditProfileFragment.class.getSimpleName());
-                transaction.addToBackStack(TAG);
-                transaction.commit();
-            }
+        buttonEditProfile.setOnClickListener(v -> {
+            EditProfileFragment editProfileFragment = new EditProfileFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, editProfileFragment, EditProfileFragment.class.getSimpleName());
+            transaction.addToBackStack(TAG);
+            transaction.commit();
         });
 
         imageViewBack = view.findViewById(R.id.image_view_back);
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());
 
     }
 
@@ -157,23 +152,20 @@ public class ProfileDetailsFragment extends Fragment {
         textViewEmail.setText(email);
     }
 
-    public void pickImage() {
-        ImagePicker.with(this)
-                .crop()//Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)
-                .start(IMAGE_PICKER_REQUEST);
-    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IMAGE_PICKER_REQUEST && resultCode == Activity.RESULT_OK) {
             Uri sourceUri = data.getData();
             if (sourceUri != null) {
-                uploadProfilePicture(sourceUri);
-            } else {
-                Toast.makeText(getContext(), "Error Occurred!", Toast.LENGTH_SHORT).show();
+                try {
+                    final InputStream imageStream = getContext().getContentResolver().openInputStream(sourceUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    userDTO.setAvatar(encodeImage(selectedImage));
+                    imageViewProfileAvatar.setImageURI(sourceUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(getContext(), ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
@@ -182,34 +174,37 @@ public class ProfileDetailsFragment extends Fragment {
         }
     }
 
-    public void uploadProfilePicture(Uri uri) {
-        pd.setMessage("Uploading Profile ...");
-        pd.show();
-        File file = new File(uri.getPath());
-
-        RequestBody requestBody = RequestBody.create(file, MediaType.parse("image/png"));
-        MultipartBody.Part profilePicture = MultipartBody.Part.createFormData("profilePicture", "avatar.png", requestBody);
-        profileDetailsViewModel.hitUploadProfilePictureApi(getActivity(), authentication, profilePicture).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-            @Override
-            public void onChanged(ResponseDTO responseDTO) {
-                pd.dismiss();
-                switch (responseDTO.getStatus()) {
-                    case "success":
-                        UserDto userDTO = sharedPreferencesManager.getUser();
-                        invalidateAvatarCache(userDTO.getId());
-                        Common.loadAvatar(userDTO, imageViewProfileAvatar);
-                        Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                        break;
-                    case "failed":
-                    case "error":
-                        Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
+    public void pickImage() {
+        ImagePicker.with(this)
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start(IMAGE_PICKER_REQUEST);
     }
 
-    private void invalidateAvatarCache(UUID userId) {
-        Picasso.get().invalidate(Constants.CORE_BASE_URL + "/api/v1/user/profile-picture/" + userId + ".png");
+    private String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] b = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
+    public void uploadAvatar(UserDto userDto) {
+        pd.setMessage("Uploading Avatar ...");
+        pd.show();
+        profileDetailsViewModel.hitUploadProfilePictureApi(getActivity(), authentication, userDto).observe(getViewLifecycleOwner(), responseDTO -> {
+            pd.dismiss();
+            switch (responseDTO.getStatus()) {
+                case "success":
+                    UserDto userDTO = sharedPreferencesManager.getUser();
+                    Common.loadAvatar(userDTO, imageViewProfileAvatar);
+                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                    break;
+                case "failed":
+                case "error":
+                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                    break;
+            }
+        });
     }
 }

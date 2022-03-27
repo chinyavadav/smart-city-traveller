@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 
 import java.text.DateFormat;

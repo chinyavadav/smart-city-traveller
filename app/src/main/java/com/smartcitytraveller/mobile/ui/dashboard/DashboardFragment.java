@@ -28,7 +28,7 @@ import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.ui.product.ProductDto;
+import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.ui.product.ProductFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductRecyclerAdapter;
 import com.smartcitytraveller.mobile.ui.product.ProductViewModel;

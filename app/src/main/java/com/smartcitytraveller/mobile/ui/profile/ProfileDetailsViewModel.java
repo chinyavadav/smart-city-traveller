@@ -98,33 +98,29 @@ public class ProfileDetailsViewModel extends ViewModel {
         }
     }
 
-    public MutableLiveData<ResponseDTO> hitUploadProfilePictureApi(final Context context, String authorization, MultipartBody.Part requestFile) {
+    public MutableLiveData<ResponseDTO> hitUploadProfilePictureApi(final Context context, String authorization, UserDto userDto) {
         responseLiveData = new MutableLiveData<>();
-        Call<ResponseDTO> ul = apiService.uploadProfilePicture(authorization, requestFile);
+        Call<UserDto> ul = apiService.updateUser(authorization, userDto);
         try {
-            ul.enqueue(new Callback<ResponseDTO>() {
+            ul.enqueue(new Callback<UserDto>() {
                 @Override
-                public void onResponse(Call<ResponseDTO> call, Response<ResponseDTO> response) {
+                public void onResponse(Call<UserDto> call, Response<UserDto> response) {
                     if (response.code() == 200) {
-                        ResponseDTO responseDTO = response.body();
+                        UserDto userDto = response.body();
                         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
-                        sharedPreferencesManager.setAvatarAvailable(true);
-                        responseLiveData.setValue(new ResponseDTO("success", responseDTO.getMessage(), null));
+                        sharedPreferencesManager.setUser(userDto);
+                        responseLiveData.setValue(new ResponseDTO("success", "Avatar successfully updated!", null));
                     } else {
-                        String errorMsg;
                         try {
-                            JSONObject jObjError = new JSONObject(response.errorBody().string());
-                            errorMsg = jObjError.getString("message");
-                        } catch (IOException | JSONException e) {
+                            responseLiveData.setValue(new ResponseDTO("failed", response.errorBody().string(), null));
+                        } catch (IOException e) {
                             e.printStackTrace();
-                            errorMsg = response.code() == 403 ? "Authentication Failed!" : "Error Occurred!";
                         }
-                        responseLiveData.setValue(new ResponseDTO("failed", errorMsg, null));
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseDTO> call, Throwable t) {
+                public void onFailure(Call<UserDto> call, Throwable t) {
                     Log.d("error", t.toString());
                     responseLiveData.setValue(new ResponseDTO("error", "Connectivity Issues!", null));
                 }

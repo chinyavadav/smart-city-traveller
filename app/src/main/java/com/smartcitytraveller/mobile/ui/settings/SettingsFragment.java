@@ -22,12 +22,9 @@ import android.widget.ImageView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.api.dto.ChangePasswordRequest;
 import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 public class SettingsFragment extends Fragment {
 
@@ -111,11 +108,11 @@ public class SettingsFragment extends Fragment {
 
             String currentPassword = editTextCurrentPassword.getText().toString();
             String newPassword = editTextNewPassword.getText().toString();
-            if (newPassword.length() >= 8) {
+            if (currentPassword.equals(userDTO.getPassword()) && newPassword.length() >= 8) {
                 pd.setMessage("Please Wait...");
                 pd.show();
 
-                settingsViewModel.hitChangePasswordApi(authentication, new ChangePasswordRequest(currentPassword, newPassword)).observe(getViewLifecycleOwner(), responseDTO -> {
+                settingsViewModel.hitChangePasswordApi(getContext(), authentication, userDTO).observe(getViewLifecycleOwner(), responseDTO -> {
                     pd.dismiss();
                     switch (responseDTO.getStatus()) {
                         case "success":
@@ -134,7 +131,11 @@ public class SettingsFragment extends Fragment {
                     }
                 });
             } else {
-                Snackbar.make(view, "Password should be longer than 8 characters!", Snackbar.LENGTH_LONG).show();
+                if (!currentPassword.equals(userDTO.getPassword())) {
+                    Snackbar.make(view, "Current password not matching!", Snackbar.LENGTH_LONG).show();
+                } else {
+                    Snackbar.make(view, "Password should be longer than 8 characters!", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }

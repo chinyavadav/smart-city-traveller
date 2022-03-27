@@ -1,4 +1,4 @@
-package com.smartcitytraveller.mobile.ui.product;
+package com.smartcitytraveller.mobile.api.dto;
 
 import java.util.Arrays;
 import java.util.List;

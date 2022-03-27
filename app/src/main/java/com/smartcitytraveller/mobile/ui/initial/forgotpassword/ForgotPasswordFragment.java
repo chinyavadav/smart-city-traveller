@@ -1,4 +1,4 @@
-package com.smartcitytraveller.mobile.ui.reset;
+package com.smartcitytraveller.mobile.ui.initial.forgotpassword;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -44,7 +44,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     String countryCode;
     FragmentManager fragmentManager;
-    ResetPasswordViewModel resetPasswordViewModel;
+    ForgotPasswordViewModel resetPasswordViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class ForgotPasswordFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        resetPasswordViewModel = new ViewModelProvider(this).get(ResetPasswordViewModel.class);
+        resetPasswordViewModel = new ViewModelProvider(this).get(ForgotPasswordViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_forgot_password, container, false);
     }
@@ -90,7 +90,7 @@ public class ForgotPasswordFragment extends Fragment {
                 if (isPhoneNumberValid) {
                     pd.setMessage("Resetting Password...");
                     pd.show();
-                    resetPasswordViewModel.hitResetPasswordApi(getActivity(), msisdn).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
+                    resetPasswordViewModel.hitResetPasswordApi(msisdn).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
                         @Override
                         public void onChanged(ResponseDTO responseDTO) {
                             Common.hideSoftKeyboard(getActivity());
