@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -18,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.auth0.android.jwt.JWT;
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -79,23 +82,10 @@ public class Common {
         }
     }
 
-    public static void loadAvatar(boolean isAvatarAvailable, ImageView imageView, UUID userId) {
-        if (isAvatarAvailable) {
-            Picasso.get()
-                    .load(Constants.CORE_BASE_URL + "/api/v1/user/profile-picture/" + userId + ".png")
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(imageView);
-        }
-    }
-
-    public void loadAvatar(boolean avatarAvailable, UUID userId, ImageView imageView) {
-        if (avatarAvailable) {
-            Picasso.get()
-                    .load(Constants.CORE_BASE_URL + "/api/v1/user/profile-picture/" + userId + ".png")
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(imageView);
+    public static void loadAvatar(UserDto userDto, ImageView imageView) {
+        if (userDto.getAvatar() != null) {
+            byte[] imageAsBytes = Base64.decode(userDto.getAvatar(), Base64.DEFAULT);
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
         }
     }
 

@@ -4,11 +4,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.api.dto.JWT;
-import com.smartcitytraveller.mobile.common.Common;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.google.gson.Gson;
 
 import java.text.DateFormat;
@@ -72,15 +70,15 @@ public class SharedPreferencesManager {
         editor.apply();
     }
 
-    public void setProfile(ProfileDto profileDTO) {
-        editor.putString("profile", new Gson().toJson(profileDTO));
+    public void setUser(UserDto userDTO) {
+        editor.putString("user", new Gson().toJson(userDTO));
         editor.putLong("lastSync", new Date().getTime());
         editor.apply();
     }
 
-    public ProfileDto getProfile() {
+    public UserDto getUser() {
         this.sharedPreferences = getSharedPreferences();
-        return sharedPreferences.get("profile") != null ? new Gson().fromJson(sharedPreferences.get("profile").toString(), ProfileDto.class) : null;
+        return sharedPreferences.get("user") != null ? new Gson().fromJson(sharedPreferences.get("user").toString(), UserDto.class) : null;
     }
 
     public long getLastSync() {

@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.gson.Gson;
@@ -53,22 +53,22 @@ public class QRCodeFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
 
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
+        UserDto userDTO = sharedPreferencesManager.getUser();
 
         imageViewProfileAvatar = view.findViewById(R.id.image_view_profile_avatar);
         imageViewQRCode = view.findViewById(R.id.image_view_qr_code);
         textViewProfileFullName = view.findViewById(R.id.text_view_full_name);
 
         Map<String, String> qrData = new HashMap<>();
-        qrData.put("msisdn", profileDTO.getMsisdn());
-        qrData.put("firstName", profileDTO.getFirstName());
-        qrData.put("lastName", profileDTO.getLastName());
+        qrData.put("msisdn", userDTO.getMsisdn());
+        qrData.put("firstName", userDTO.getFirstName());
+        qrData.put("lastName", userDTO.getLastName());
         String contents = new Gson().toJson(qrData);
 
         Bitmap bitmap = Common.generateQRCode(contents);
         imageViewQRCode.setImageBitmap(bitmap);
-        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
-        String fullName = profileDTO.getFirstName() + " " + profileDTO.getLastName();
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
+        String fullName = userDTO.getFirstName() + " " + userDTO.getLastName();
         textViewProfileFullName.setText(fullName);
 
         imageViewBack = view.findViewById(R.id.image_view_back);

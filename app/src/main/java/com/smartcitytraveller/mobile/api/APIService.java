@@ -1,7 +1,7 @@
 package com.smartcitytraveller.mobile.api;
 
 import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.api.dto.ChangePasswordRequest;
@@ -9,10 +9,10 @@ import com.smartcitytraveller.mobile.api.dto.ResetPasswordRequest;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
 import com.smartcitytraveller.mobile.api.dto.SignUpRequest;
-import com.smartcitytraveller.mobile.api.dto.UpdateProfileRequest;
 import com.smartcitytraveller.mobile.ui.product.ProductDto;
 
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -46,6 +46,18 @@ public interface APIService {
     @POST("/api/v1/user/sign-up")
     Call<AuthResponseDto> signUp(@Body SignUpRequest signUpRequest);
 
+
+    @Headers({
+            "Accept: application/json"
+    })
+    @GET("/api/v1/user/{userId}")
+    Call<UserDto> getUser(@Header("Authorization") String authentication, @Path("userId") UUID userId);
+
+    @Headers({
+            "Accept: application/json"
+    })
+    @PUT("/api/v1/user")
+    Call<UserDto> updateUser(@Header("Authorization") String authentication, @Body UserDto updateProfileRequest);
 
     @Headers({
             "Accept: application/json"
@@ -91,16 +103,4 @@ public interface APIService {
     @Multipart
     @POST("/api/v1/user/profile-picture")
     Call<ResponseDTO> uploadProfilePicture(@Header("Authorization") String authentication, @Part MultipartBody.Part profilePicture);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @GET("/api/v1/profile")
-    Call<ProfileDto> getProfile(@Header("Authorization") String authentication);
-
-    @Headers({
-            "Accept: application/json"
-    })
-    @PUT("/api/v1/profile")
-    Call<ProfileDto> updateProfile(@Header("Authorization") String authentication, @Body UpdateProfileRequest updateProfileRequest);
 }

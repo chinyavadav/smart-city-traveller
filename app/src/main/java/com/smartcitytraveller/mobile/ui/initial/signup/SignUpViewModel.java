@@ -8,9 +8,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
-import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.api.dto.AuthResponseDto;
 import com.smartcitytraveller.mobile.api.dto.JWT;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
@@ -20,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,8 +44,8 @@ public class SignUpViewModel extends ViewModel {
                         JWT jwt = authResponseDto.getJwt();
                         sharedPreferencesManager.setJWT(jwt);
 
-                        ProfileDto profileDTO = authResponseDto.getProfile();
-                        sharedPreferencesManager.setProfile(profileDTO);
+                        UserDto userDTO = authResponseDto.getUser();
+                        sharedPreferencesManager.setUser(userDTO);
 
                         responseLiveData.setValue(new ResponseDTO("success", null, null));
                     } else {

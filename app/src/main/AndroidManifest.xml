@@ -64,7 +64,7 @@
              new_productsDto message. See README(https://goo.gl/6BKBk7) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/blue" />
+            android:resource="@color/grey" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

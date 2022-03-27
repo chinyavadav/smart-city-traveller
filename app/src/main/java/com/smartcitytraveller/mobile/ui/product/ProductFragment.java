@@ -23,7 +23,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
+import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.gson.Gson;
@@ -73,19 +74,13 @@ public class ProductFragment extends Fragment {
         fragmentManager = getActivity().getSupportFragmentManager();
         String authentication = sharedPreferencesManager.getAuthenticationToken();
 
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
+        UserDto userDTO = sharedPreferencesManager.getUser();
 
         imageViewBack = view.findViewById(R.id.image_view_back);
         imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());
 
         imageViewProfileAvatar = view.findViewById(R.id.ctf_image_view_profile_avatar);
-        if (profileDTO.isAvatarAvailable()) {
-            Picasso.get()
-                    .load(Constants.CORE_BASE_URL + "/api/v1/user/profile-picture/" + profileDTO.getId() + ".png")
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(imageViewProfileAvatar);
-        }
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
 
         imageViewProduct = view.findViewById(R.id.image_view_product);
         byte[] decodedString = Base64.decode(product.getImageFirst(), Base64.DEFAULT);

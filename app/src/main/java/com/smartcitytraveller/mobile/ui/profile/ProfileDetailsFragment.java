@@ -25,7 +25,7 @@ import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.snackbar.Snackbar;
@@ -75,7 +75,7 @@ public class ProfileDetailsFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
 
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
+        UserDto userDTO = sharedPreferencesManager.getUser();
         authentication = sharedPreferencesManager.getAuthenticationToken();
 
         long lastSync = sharedPreferencesManager.getLastSync();
@@ -84,21 +84,18 @@ public class ProfileDetailsFragment extends Fragment {
         if (now - lastSync >= 300000) {
             pd.setMessage("Syncing Profile ...");
             pd.show();
-            profileDetailsViewModel.hitGetProfileApi(getActivity(), authentication).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-                @Override
-                public void onChanged(ResponseDTO responseDTO) {
-                    pd.dismiss();
-                    switch (responseDTO.getStatus()) {
-                        case "success":
-                            Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                            ProfileDto profileDTO = sharedPreferencesManager.getProfile();
-                            populateFields(profileDTO);
-                            break;
-                        case "failed":
-                        case "error":
-                            Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                            break;
-                    }
+            profileDetailsViewModel.hitGetUserApi(getActivity(), authentication, userDTO.getId()).observe(getViewLifecycleOwner(), responseDTO -> {
+                pd.dismiss();
+                switch (responseDTO.getStatus()) {
+                    case "success":
+                        Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                        UserDto userDTO1 = sharedPreferencesManager.getUser();
+                        populateFields(userDTO1);
+                        break;
+                    case "failed":
+                    case "error":
+                        Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                        break;
                 }
             });
         }
@@ -109,17 +106,16 @@ public class ProfileDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 pickImage();
-//                showDialogForProfileImageEdit();
             }
         });
 
-        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
 
         textViewFullName = view.findViewById(R.id.text_view_full_name);
         textViewPhoneNumber = view.findViewById(R.id.text_view_phone_value);
         textViewEmail = view.findViewById(R.id.text_view_email_value);
 
-        populateFields(profileDTO);
+        populateFields(userDTO);
 
         buttonEditProfile = view.findViewById(R.id.button_edit_profile);
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -146,16 +142,16 @@ public class ProfileDetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
-        populateFields(profileDTO);
-        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
+        UserDto userDTO = sharedPreferencesManager.getUser();
+        populateFields(userDTO);
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
     }
 
-    public void populateFields(ProfileDto profileDTO) {
-        String firstName = profileDTO.getFirstName();
-        String fullName = firstName + " " + profileDTO.getLastName();
-        String msisdn = profileDTO.getMsisdn();
-        String email = profileDTO.getEmail();
+    public void populateFields(UserDto userDTO) {
+        String firstName = userDTO.getFirstName();
+        String fullName = firstName + " " + userDTO.getLastName();
+        String msisdn = userDTO.getMsisdn();
+        String email = userDTO.getEmail();
         textViewFullName.setText(fullName);
         textViewPhoneNumber.setText(msisdn);
         textViewEmail.setText(email);
@@ -199,9 +195,9 @@ public class ProfileDetailsFragment extends Fragment {
                 pd.dismiss();
                 switch (responseDTO.getStatus()) {
                     case "success":
-                        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
-                        invalidateAvatarCache(profileDTO.getId());
-                        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
+                        UserDto userDTO = sharedPreferencesManager.getUser();
+                        invalidateAvatarCache(userDTO.getId());
+                        Common.loadAvatar(userDTO, imageViewProfileAvatar);
                         Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
                         break;
                     case "failed":

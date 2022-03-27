@@ -26,7 +26,8 @@ import android.widget.Toast;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CreateProductDto;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
+import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
@@ -94,16 +95,10 @@ public class PickProductImagesFragment extends Fragment {
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         String authentication = sharedPreferencesManager.getAuthenticationToken();
 
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
+        UserDto userDTO = sharedPreferencesManager.getUser();
 
         imageViewProfileAvatar = view.findViewById(R.id.circular_image_view_avatar);
-        if (profileDTO.isAvatarAvailable()) {
-            Picasso.get()
-                    .load(Constants.CORE_BASE_URL + "/api/v1/user/avatar/" + profileDTO.getId() + ".png")
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(imageViewProfileAvatar);
-        }
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
 
         imageViewBack = view.findViewById(R.id.image_view_back);
         imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());
@@ -123,7 +118,7 @@ public class PickProductImagesFragment extends Fragment {
                     && imageSecond != null && !imageSecond.isEmpty()
             ) {
                 if (category != null && name != null && description != null && price > 0 && imageFirst != null && imageSecond != null && lat != 0 && lng != 0) {
-                    CreateProductDto createProductDto = new CreateProductDto(profileDTO.getId(), category, name, description, price, imageFirst, imageSecond, lat, lng);
+                    CreateProductDto createProductDto = new CreateProductDto(userDTO.getId(), category, name, description, price, imageFirst, imageSecond, lat, lng);
                     pd.setMessage("Creating ...");
                     pd.show();
                     productViewModel.hitSaveProductApi(authentication, createProductDto).observe(getViewLifecycleOwner(), responseDTO -> {

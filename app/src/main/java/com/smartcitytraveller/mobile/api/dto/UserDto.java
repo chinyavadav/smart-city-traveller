@@ -1,20 +1,18 @@
 package com.smartcitytraveller.mobile.api.dto;
 
 import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
-public class ProfileDto {
+public class UserDto {
     private UUID id;
     private String msisdn;
     private String email;
     private String firstName;
     private String lastName;
-    private boolean avatarAvailable;
-    private ZonedDateTime createdAt;
-    private ZonedDateTime updatedAt;
-
+    private String avatar;
+    private String password;
+    private ZonedDateTime created;
+    private ZonedDateTime updated;
 
     public UUID getId() {
         return id;
@@ -56,27 +54,35 @@ public class ProfileDto {
         this.lastName = lastName;
     }
 
-    public boolean isAvatarAvailable() {
-        return avatarAvailable;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarAvailable(boolean avatarAvailable) {
-        this.avatarAvailable = avatarAvailable;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public ZonedDateTime getUpdatedAt() {
-        return updatedAt;
+    public ZonedDateTime getCreated() {
+        return created;
     }
 
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setCreated(ZonedDateTime created) {
+        this.created = created;
+    }
+
+    public ZonedDateTime getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(ZonedDateTime updated) {
+        this.updated = updated;
     }
 }

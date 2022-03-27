@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.ui.product.CreateProductFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductDto;
 import com.smartcitytraveller.mobile.ui.product.ProductFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductRecyclerAdapter;
 import com.smartcitytraveller.mobile.ui.product.ProductViewModel;
-import com.smartcitytraveller.mobile.ui.product.ProductsFragment;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
 import com.smartcitytraveller.mobile.ui.settings.SettingsFragment;
@@ -62,7 +59,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     FragmentManager fragmentManager;
     SharedPreferencesManager sharedPreferencesManager;
-    ProfileDto profileDTO;
+    UserDto userDTO;
     String authentication;
     private ProductViewModel productViewModel;
 
@@ -89,7 +86,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         pd = new ProgressDialog(getActivity());
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         authentication = sharedPreferencesManager.getAuthenticationToken();
-        profileDTO = sharedPreferencesManager.getProfile();
+        userDTO = sharedPreferencesManager.getUser();
 
         drawerLayout = view.findViewById(R.id.drawer_layout);
         NavigationView navigationView = getView().findViewById(R.id.nav_view);
@@ -129,7 +126,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        syncDisplay(profileDTO);
+        syncDisplay(userDTO);
         fetchRecommendedProducts();
     }
 
@@ -138,9 +135,9 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        profileDTO = sharedPreferencesManager.getProfile();
+        userDTO = sharedPreferencesManager.getUser();
         fetchRecommendedProducts();
-        syncDisplay(profileDTO);
+        syncDisplay(userDTO);
     }
 
     public void showProfileDetailsFragment() {
@@ -229,7 +226,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
             switch (responseDTO.getStatus()) {
                 case "success":
                     Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                    profileDTO = sharedPreferencesManager.getProfile();
+                    userDTO = sharedPreferencesManager.getUser();
                     break;
                 case "failed":
                 case "error":
@@ -250,12 +247,10 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         pd.dismiss();
     }
 
-    public void syncDisplay(ProfileDto profileDTO) {
-        String firstName = profileDTO.getFirstName();
-        String fullName = firstName + " " + profileDTO.getLastName();
-        String msisdn = profileDTO.getMsisdn();
-        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewProfileAvatar, profileDTO.getId());
-        Common.loadAvatar(profileDTO.isAvatarAvailable(), imageViewNavHeaderAvatar, profileDTO.getId());
+    public void syncDisplay(UserDto userDTO) {
+        String fullName = userDTO.getFirstName() + " " + userDTO.getLastName();
+        String msisdn = userDTO.getMsisdn();
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
         textViewFullName.setText(fullName);
         textViewNavHeaderFullName.setText(fullName);
         textViewMsisdn.setText(msisdn);

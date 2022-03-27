@@ -4,20 +4,20 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class AuthResponseDto {
-    @SerializedName("profile")
+    @SerializedName("user")
     @Expose
-    ProfileDto profile;
+    UserDto user;
 
     @SerializedName("jwt")
     @Expose
     JWT jwt;
 
-    public ProfileDto getProfile() {
-        return profile;
+    public UserDto getUser() {
+        return user;
     }
 
-    public void setProfile(ProfileDto profile) {
-        this.profile = profile;
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 
     public JWT getJwt() {

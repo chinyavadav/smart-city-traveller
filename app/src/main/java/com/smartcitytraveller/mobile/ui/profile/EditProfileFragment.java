@@ -2,6 +2,7 @@ package com.smartcitytraveller.mobile.ui.profile;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +22,14 @@ import android.widget.ImageView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-import com.smartcitytraveller.mobile.api.dto.UpdateProfileRequest;
+import com.smartcitytraveller.mobile.common.Common;
 import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,9 +44,6 @@ public class EditProfileFragment extends Fragment {
 
     EditText editTextFirstName, editTextLastName, editTextEmail;
     Button buttonSaveProfile;
-
-    @SuppressLint("SimpleDateFormat")
-    SimpleDateFormat shortDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     FragmentManager fragmentManager;
     private ProfileDetailsViewModel profileDetailsViewModel;
@@ -72,10 +70,10 @@ public class EditProfileFragment extends Fragment {
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         String authentication = sharedPreferencesManager.getAuthenticationToken();
 
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
-        String firstName = profileDTO.getFirstName();
-        String lastName = profileDTO.getLastName();
-        String email = profileDTO.getEmail();
+        UserDto userDTO = sharedPreferencesManager.getUser();
+        String firstName = userDTO.getFirstName();
+        String lastName = userDTO.getLastName();
+        String email = userDTO.getEmail();
 
         editTextFirstName = view.findViewById(R.id.edit_text_first_name);
         editTextLastName = view.findViewById(R.id.edit_text_last_name);
@@ -86,62 +84,50 @@ public class EditProfileFragment extends Fragment {
         editTextEmail.setText(email);
 
         imageViewProfileAvatar = view.findViewById(R.id.circular_image_view_avatar);
-        if (profileDTO.isAvatarAvailable()) {
-            Picasso.get()
-                    .load(Constants.CORE_BASE_URL + "/api/v1/user/profile-picture/" + profileDTO.getId() + ".png")
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(imageViewProfileAvatar);
-        }
+        Common.loadAvatar(userDTO, imageViewProfileAvatar);
 
         imageViewBack = view.findViewById(R.id.image_view_back);
-        imageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        imageViewBack.setOnClickListener(v -> getActivity().onBackPressed());
 
 
         buttonSaveProfile = view.findViewById(R.id.button_save_profile);
-        buttonSaveProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String firstName = editTextFirstName.getText().toString();
-                String lastName = editTextLastName.getText().toString();
-                String email = editTextEmail.getText().toString();
+        buttonSaveProfile.setOnClickListener(v -> {
+            String firstName1 = editTextFirstName.getText().toString();
+            String lastName1 = editTextLastName.getText().toString();
+            String email1 = editTextEmail.getText().toString();
 
-                if (firstName.length() > 1 && lastName.length() > 1 && email.length() > 1) {
-                    if (profileDTO != null && firstName.equals(profileDTO.getFirstName()) && lastName.equals(profileDTO.getLastName()) && email.equals(profileDTO.getEmail())) {
-                        Snackbar.make(view, "No changes detected!", Snackbar.LENGTH_LONG).show();
-                    } else {
-                        UpdateProfileRequest updateProfileRequest = new UpdateProfileRequest(email, firstName, lastName);
-                        pd.setMessage("Updating ...");
-                        pd.show();
-                        profileDetailsViewModel.hitUpdateProfileApi(getActivity(), authentication, updateProfileRequest).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-                            @Override
-                            public void onChanged(ResponseDTO responseDTO) {
-                                pd.dismiss();
-                                switch (responseDTO.getStatus()) {
-                                    case "success":
-                                        Snackbar.make(view, "Successfully updated profile!", Snackbar.LENGTH_LONG).show();
-                                        break;
-                                    case "failed":
-                                    case "error":
-                                        Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                                        break;
-                                }
-                            }
-                        });
-                    }
+            if (firstName1.length() > 1 && lastName1.length() > 1 && email1.length() > 1) {
+                if (firstName1.equals(userDTO.getFirstName()) && lastName1.equals(userDTO.getLastName()) && email1.equals(userDTO.getEmail())) {
+                    Snackbar.make(view, "No changes detected!", Snackbar.LENGTH_LONG).show();
                 } else {
-                    if (firstName.length() < 2) {
-                        Snackbar.make(view, "Enter valid First Name!", Snackbar.LENGTH_LONG).show();
-                    } else if (lastName.length() < 2) {
-                        Snackbar.make(view, "Enter valid Last Name!", Snackbar.LENGTH_LONG).show();
-                    } else if (email.length() < 5) {
-                        Snackbar.make(view, "Enter valid Email!", Snackbar.LENGTH_LONG).show();
-                    }
+                    userDTO.setEmail(email1);
+                    userDTO.setFirstName(firstName1);
+                    userDTO.setLastName(lastName1);
+                    pd.setMessage("Updating ...");
+                    pd.show();
+                    profileDetailsViewModel.hitUpdateUserApi(getActivity(), authentication, userDTO).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
+                        @Override
+                        public void onChanged(ResponseDTO responseDTO) {
+                            pd.dismiss();
+                            switch (responseDTO.getStatus()) {
+                                case "success":
+                                    Snackbar.make(view, "Successfully updated profile!", Snackbar.LENGTH_LONG).show();
+                                    break;
+                                case "failed":
+                                case "error":
+                                    Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }
+                    });
+                }
+            } else {
+                if (firstName1.length() < 2) {
+                    Snackbar.make(view, "Enter valid First Name!", Snackbar.LENGTH_LONG).show();
+                } else if (lastName1.length() < 2) {
+                    Snackbar.make(view, "Enter valid Last Name!", Snackbar.LENGTH_LONG).show();
+                } else if (email1.length() < 5) {
+                    Snackbar.make(view, "Enter valid Email!", Snackbar.LENGTH_LONG).show();
                 }
             }
         });

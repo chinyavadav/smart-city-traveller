@@ -5,26 +5,21 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.util.Log;
-import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.smartcitytraveller.mobile.MainActivity;
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.ProfileDto;
+import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.FirestoreHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
 public class FirebaseMessageReceiver extends FirebaseMessagingService {
@@ -50,10 +45,10 @@ public class FirebaseMessageReceiver extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(this);
-        ProfileDto profileDTO = sharedPreferencesManager.getProfile();
+        UserDto userDTO = sharedPreferencesManager.getUser();
         FirestoreHandler firestoreHandler = new FirestoreHandler();
-        if (profileDTO.getId() != null) {
-            firestoreHandler.saveFCMToken(profileDTO.getId(), token);
+        if (userDTO.getId() != null) {
+            firestoreHandler.saveFCMToken(userDTO.getId(), token);
         }
     }
 

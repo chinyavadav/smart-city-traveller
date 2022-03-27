@@ -94,7 +94,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/phone_number"
                 android:src="@drawable/phone_android"
-                app:tint="@color/blue" />
+                app:tint="@color/grey" />
 
             <TextView
                 android:id="@+id/text_view_phone_label"
@@ -136,7 +136,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/email"
                 android:src="@drawable/mail"
-                app:tint="@color/blue" />
+                app:tint="@color/grey" />
 
             <TextView
                 android:id="@+id/text_view_email_label"
