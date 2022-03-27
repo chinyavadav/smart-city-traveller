@@ -96,10 +96,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         navigationView.setNavigationItemSelectedListener(this);
         View navHeaderView = navigationView.getHeaderView(0);
 
-        Menu navMenu = navigationView.getMenu();
-        MenuItem newProductsItem = navMenu.findItem(R.id.nav_new_products);
-        newProductsItem.setVisible(true);
-
         imageViewNavHeaderAvatar = navHeaderView.findViewById(R.id.image_view_nav_header_avatar);
         textViewNavHeaderFullName = navHeaderView.findViewById(R.id.text_view_nav_header_full_name);
         textViewNavHeaderMsisdn = navHeaderView.findViewById(R.id.text_view_nav_header_msisdn);
@@ -206,15 +202,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
             case R.id.nav_profile:
                 showProfileDetailsFragment();
                 break;
-            case R.id.nav_new_products:
-                ProductsFragment productsFragment = new com.smartcitytraveller.mobile.ui.product.ProductsFragment();
-                transaction.add(R.id.container, productsFragment, com.smartcitytraveller.mobile.ui.product.ProductsFragment.class.getSimpleName());
-                transaction.addToBackStack(TAG);
-                break;
-            case R.id.nav_create_product:
-                CreateProductFragment createProductFragment = new CreateProductFragment();
-                transaction.add(R.id.container, createProductFragment, CreateProductFragment.class.getSimpleName());
-                transaction.addToBackStack(TAG);
+            case R.id.nav_share_location:
                 break;
             case R.id.nav_settings:
                 SettingsFragment settingsFragment = new SettingsFragment();
