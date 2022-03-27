@@ -12,13 +12,14 @@ import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.smartcitytraveller.mobile.ui.initial.splashscreen.SplashScreenFragment;
+import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     ProgressDialog pd;
     SharedPreferencesManager sharedPreferencesManager;
-    UserDto userDTO;
+    UserDto userDto;
 
     FragmentManager fragmentManager;
 
@@ -33,9 +34,14 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferencesManager = new SharedPreferencesManager(this);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (Util.isSessionValid(sharedPreferencesManager)) {
-            userDTO = sharedPreferencesManager.getUser();
-            DashboardFragment dashboardFragment = new DashboardFragment();
-            transaction.add(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
+            userDto = sharedPreferencesManager.getUser();
+            if (userDto.getNextOfKin() == null) {
+                NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
+                transaction.add(R.id.container, nextOfKinFragment, NextOfKinFragment.class.getSimpleName());
+            } else {
+                DashboardFragment dashboardFragment = new DashboardFragment();
+                transaction.add(R.id.container, dashboardFragment, DashboardFragment.class.getSimpleName());
+            }
         } else {
             SplashScreenFragment splashScreenFragment = new SplashScreenFragment();
             transaction.add(R.id.container, splashScreenFragment, SplashScreenFragment.class.getSimpleName());

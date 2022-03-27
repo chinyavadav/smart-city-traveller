@@ -84,13 +84,13 @@ public class NextOfKinFragment extends Fragment {
         editTextRelationship.setOnTouchListener((v, event) -> {
             if (!dialogActive) {
                 dialogActive = true;
-                String[] categories = NextOfKinConstants.categories.toArray(new String[0]);
+                String[] categories = NextOfKinConstants.relationships.toArray(new String[0]);
                 CharSequence[] options = new CharSequence[categories.length];
                 for (int i = 0; i < categories.length; i++) {
                     options[i] = categories[i];
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(getString(R.string.categories));
+                builder.setTitle(getString(R.string.relationship));
                 builder.setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> {
                     dialogActive = true;
                     dialog.dismiss();
@@ -106,7 +106,7 @@ public class NextOfKinFragment extends Fragment {
         });
 
 
-        buttonSave = view.findViewById(R.id.button_save_profile);
+        buttonSave = view.findViewById(R.id.button_save);
         buttonSave.setOnClickListener(v -> {
             String relationship = editTextRelationship.getText().toString();
             String firstName = editTextFirstName.getText().toString();
