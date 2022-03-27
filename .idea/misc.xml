@@ -20,13 +20,14 @@
         <entry key="app/src/main/res/layout/fragment_edit_profile.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_edit_profile_address.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_edit_profile_identification.xml" value="0.17299898682877407" />
-        <entry key="app/src/main/res/layout/fragment_forgot_password.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/fragment_forgot_password.xml" value="0.14241960183767227" />
         <entry key="app/src/main/res/layout/fragment_goods_and_services.xml" value="0.11684782608695653" />
         <entry key="app/src/main/res/layout/fragment_invite_siba_member.xml" value="0.21240942028985507" />
         <entry key="app/src/main/res/layout/fragment_mobile_topup.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_mobile_topup_checkout.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_my_siba_invites.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_navigation.xml" value="0.18229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_next_of_kin.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_notification.xml" value="0.17299898682877407" />
         <entry key="app/src/main/res/layout/fragment_o_t_p.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/fragment_offerings.xml" value="0.17299898682877407" />
@@ -42,7 +43,9 @@
         <entry key="app/src/main/res/layout/fragment_q_r_code.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/fragment_reset_password.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/fragment_services.xml" value="0.18229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_siba_profiles.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_splash_screen.xml" value="0.14814814814814814" />
         <entry key="app/src/main/res/layout/fragment_transaction_status.xml" value="0.18229166666666666" />

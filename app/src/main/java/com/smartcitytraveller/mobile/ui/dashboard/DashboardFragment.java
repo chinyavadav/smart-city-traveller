@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,13 +24,11 @@ import android.widget.TextView;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
-import com.smartcitytraveller.mobile.database.DbHandler;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProductDto;
-import com.smartcitytraveller.mobile.ui.panick.NextOfKinFragment;
-import com.smartcitytraveller.mobile.ui.panick.PanicButtonFragment;
+import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
+import com.smartcitytraveller.mobile.ui.panic.PanicButtonFragment;
 import com.smartcitytraveller.mobile.ui.product.ProductFragment;
-import com.smartcitytraveller.mobile.ui.product.ProductRecyclerAdapter;
 import com.smartcitytraveller.mobile.ui.product.ProductViewModel;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
@@ -41,9 +37,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package com.smartcitytraveller.mobile.ui.panick;
+package com.smartcitytraveller.mobile.ui.panic;
 
 import android.os.Bundle;
 
@@ -14,7 +14,7 @@ import com.smartcitytraveller.mobile.R;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class PanicButtonFragment extends Fragment {
+public class NextOfKinFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,6 @@ public class PanicButtonFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_panic_button, container, false);
+        return inflater.inflate(R.layout.fragment_next_of_kin, container, false);
     }
 }
