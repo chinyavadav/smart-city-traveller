@@ -28,10 +28,10 @@ import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
 import com.smartcitytraveller.mobile.ui.panic.PanicButtonFragment;
-import com.smartcitytraveller.mobile.ui.product.ProductFragment;
-import com.smartcitytraveller.mobile.ui.product.ProductViewModel;
+import com.smartcitytraveller.mobile.ui.navigate.NavigationViewModel;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
+import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsViewModel;
 import com.smartcitytraveller.mobile.ui.settings.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -56,7 +56,8 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     SharedPreferencesManager sharedPreferencesManager;
     UserDto userDTO;
     String authentication;
-    private ProductViewModel productViewModel;
+    private NavigationViewModel navigationViewModel;
+    private ProfileDetailsViewModel profileDetailsViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,8 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        productViewModel = new ViewModelProvider(this).get(ProductViewModel.class);
+        navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
+        profileDetailsViewModel = new ViewModelProvider(this).get(ProfileDetailsViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
@@ -128,18 +130,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         transaction.commit();
     }
 
-    public void navigateToProvider(ProductDto product) {
-
-        Bundle bundle = new Bundle();
-        bundle.putString("product", new Gson().toJson(product));
-        ProductFragment productFragment = new ProductFragment();
-        productFragment.setArguments(bundle);
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, productFragment, FragmentTransaction.class.getSimpleName());
-        transaction.addToBackStack(TAG);
-        transaction.commit();
-    }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -190,13 +180,10 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         pd.setMessage("Please Wait ...");
         pd.show();
 
-        productViewModel.getProducts(getActivity(), authentication).observe(getViewLifecycleOwner(), responseDTO -> {
+        profileDetailsViewModel.hitGetUserApi(getActivity(), authentication, userDTO.getId()).observe(getViewLifecycleOwner(), responseDTO -> {
             pd.dismiss();
             switch (responseDTO.getStatus()) {
                 case "success":
-                    Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                    userDTO = sharedPreferencesManager.getUser();
-                    break;
                 case "failed":
                 case "error":
                     Snackbar.make(getView(), responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();

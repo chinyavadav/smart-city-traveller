@@ -1,4 +1,4 @@
-package com.smartcitytraveller.mobile.ui.product;
+package com.smartcitytraveller.mobile.ui.navigate;
 
 import static com.smartcitytraveller.mobile.common.Constants.CORE_BASE_URL;
 
