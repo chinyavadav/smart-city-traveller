@@ -160,12 +160,7 @@ public class NextOfKinFragment extends Fragment {
             String msisdn = editTextMsisdn.getText().toString();
 
             NextOfKin nextOfKin = userDTO.getNextOfKin() != null ? userDTO.getNextOfKin() :
-                    new NextOfKin();
-            nextOfKin.setId(nextOfKin.getId());
-            nextOfKin.setRelationship(nextOfKin.getRelationship());
-            nextOfKin.setFirstName(nextOfKin.getFirstName());
-            nextOfKin.setLastName(nextOfKin.getLastName());
-            nextOfKin.setMsisdn(nextOfKin.getMsisdn());
+                    new NextOfKin(userDTO.getId(), relationship, firstName, lastName, msisdn);
 
             if (!relationship.isEmpty() && !firstName.isEmpty() && !lastName.isEmpty() && !msisdn.isEmpty()) {
                 pd.setMessage("Saving...");

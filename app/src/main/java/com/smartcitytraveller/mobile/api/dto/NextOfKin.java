@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public class NextOfKin {
     private UUID id;
+    private UUID userId;
     private String relationship;
     private String firstName;
     private String lastName;
@@ -11,12 +12,31 @@ public class NextOfKin {
     private String created;
     private String updated;
 
+    public NextOfKin( ) {
+    }
+
+    public NextOfKin(UUID userId, String relationship, String firstName, String lastName, String msisdn) {
+        this.userId = userId;
+        this.relationship = relationship;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.msisdn = msisdn;
+    }
+
     public UUID getId() {
         return id;
     }
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
     public String getRelationship() {
