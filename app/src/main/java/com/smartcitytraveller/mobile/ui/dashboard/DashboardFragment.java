@@ -31,13 +31,13 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.play.core.tasks.OnSuccessListener;
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
@@ -70,12 +70,14 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     ImageView imageViewProfileAvatar, imageViewNavHeaderAvatar, imageViewMenu;
     ProgressDialog pd;
     WebView webViewMap;
-    Button buttonMapOptions;
+    ImageView buttonMapOptions;
+    SearchView searchView;
 
     FragmentManager fragmentManager;
     SharedPreferencesManager sharedPreferencesManager;
 
     double latitude = 0, longitude = 0;
+    String search = null;
 
     private FusedLocationProviderClient fusedLocationClient;
 
@@ -139,7 +141,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
         imageViewProfileAvatar.setOnClickListener(v -> showProfileDetailsFragment());
 
-        buttonMapOptions = view.findViewById(R.id.button_map_options);
+        buttonMapOptions = view.findViewById(R.id.image_view_button_map_options);
         buttonMapOptions.setOnClickListener(view1 -> {
             if (!mapOptionsActive) {
                 mapOptionsActive = true;
@@ -162,13 +164,19 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
                     if (MapOptions.getView(option).equals(MapOptions.refresh)) {
                         loadMap(viewName);
                     } else {
-                        viewName = MapOptions.getView(option);
-                        loadMap(viewName);
+                        if (searchView.getQuery() == null) {
+                            Toast.makeText(getContext(), "Please enter search criteria!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            viewName = MapOptions.getView(option);
+                            loadMap(viewName);
+                        }
                     }
                 });
                 builder.show();
             }
         });
+
+        searchView = view.findViewById(R.id.search_view_dashboard);
 
         webViewMap = getView().findViewById(R.id.web_view_map);
         WebSettings webSettings = webViewMap.getSettings();
@@ -178,7 +186,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     public void loadMap(MapOptions viewName) {
         getLastLocation();
-        link = CORE_BASE_URL + "/api/v1/navigation?viewName=" + viewName.name() + "&lat=" + latitude + "&lng=" + longitude;
+        link = CORE_BASE_URL + "/api/v1/navigation?viewName=" + viewName.name() + "&lat=" + latitude + "&lng=" + longitude + "&search=" + searchView.getQuery();
         webViewMap.setWebViewClient(new NavigationWebViewClient());
         webViewMap.loadUrl(link, headers);
     }

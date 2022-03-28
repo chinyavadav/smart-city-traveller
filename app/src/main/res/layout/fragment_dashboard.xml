@@ -75,7 +75,7 @@
 
                     <LinearLayout
                         android:id="@+id/linearLayout6"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -102,6 +102,7 @@
                             android:text="@string/dummy_phone"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
                     </LinearLayout>
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -111,27 +112,53 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Button
-                android:id="@+id/button_map_options"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/linear_layout_search_and_options"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/map_options"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/web_view_map"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <SearchView
+                    android:id="@+id/search_view_dashboard"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/image_view_button_map_options"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                </SearchView>
+
+                <ImageView
+                    android:id="@+id/image_view_button_map_options"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/map_options"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_plus"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <WebView
                 android:id="@+id/web_view_map"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_map_options" />
+                app:layout_constraintTop_toBottomOf="@+id/linear_layout_search_and_options">
+
+            </WebView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
