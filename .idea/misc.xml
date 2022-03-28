@@ -45,9 +45,9 @@
         <entry key="app/src/main/res/layout/fragment_services.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_siba_profiles.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_sign_in.xml" value="0.4283783783783784" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_splash_screen.xml" value="0.14814814814814814" />
+        <entry key="app/src/main/res/layout/fragment_splash_screen.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_transaction_status.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/fragment_web_view.xml" value="0.18229166666666666" />
         <entry key="app/src/main/res/layout/item_goods_and_services_list.xml" value="0.11684782608695653" />

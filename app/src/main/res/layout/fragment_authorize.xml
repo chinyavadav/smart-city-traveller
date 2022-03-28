@@ -40,7 +40,10 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/enter_phone_number"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/grey"
+                android:textColor="@color/black"
+                android:textColorHighlight="@color/black"
+                android:textColorHint="@color/black"
+                android:textColorLink="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
