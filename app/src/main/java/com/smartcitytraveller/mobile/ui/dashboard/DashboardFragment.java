@@ -1,7 +1,11 @@
 package com.smartcitytraveller.mobile.ui.dashboard;
 
+import static com.smartcitytraveller.mobile.common.Constants.CORE_BASE_URL;
+
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +22,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,19 +33,18 @@ import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ProductDto;
 import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
 import com.smartcitytraveller.mobile.ui.panic.PanicButtonFragment;
-import com.smartcitytraveller.mobile.ui.navigate.NavigationViewModel;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsFragment;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsViewModel;
 import com.smartcitytraveller.mobile.ui.settings.SettingsFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,12 +58,17 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     TextView textViewFullName, textViewNavHeaderFullName, textViewMsisdn, textViewNavHeaderMsisdn;
     ImageView imageViewProfileAvatar, imageViewNavHeaderAvatar, imageViewMenu;
     ProgressDialog pd;
+    WebView webViewMap;
 
     FragmentManager fragmentManager;
     SharedPreferencesManager sharedPreferencesManager;
+
     UserDto userDTO;
-    String authentication;
-    private NavigationViewModel navigationViewModel;
+    String authentication, link;
+    private Map<String, String> headers = new HashMap<>();
+
+    double currentLat = -17.838721867867875, currentLng = 31.00688344366997, destinationLat = 0, destinationLng = 0;
+
     private ProfileDetailsViewModel profileDetailsViewModel;
 
     @Override
@@ -66,7 +78,6 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        navigationViewModel = new ViewModelProvider(this).get(NavigationViewModel.class);
         profileDetailsViewModel = new ViewModelProvider(this).get(ProfileDetailsViewModel.class);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -105,6 +116,15 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         imageViewMenu.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
         imageViewProfileAvatar.setOnClickListener(v -> showProfileDetailsFragment());
+
+        link = CORE_BASE_URL + "/api/v1/navigation?currentLat=" + currentLat + "&currentLng=" + currentLng + "&destinationLat=" + destinationLat + "&destinationLng=" + destinationLng;
+        webViewMap = getView().findViewById(R.id.web_view_map);
+        WebSettings webSettings = webViewMap.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webViewMap.setWebViewClient(new NavigationWebViewClient());
+        webViewMap.loadUrl(link, headers);
+
+
     }
 
     @Override
@@ -213,6 +233,43 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         textViewNavHeaderFullName.setText(fullName);
         textViewMsisdn.setText(msisdn);
         textViewNavHeaderMsisdn.setText(msisdn);
+    }
+
+    private class NavigationWebViewClient extends WebViewClient {
+        ProgressDialog pd = new ProgressDialog(getContext());
+
+        public NavigationWebViewClient() {
+            pd.setTitle("Loading...");
+            pd.setMessage("Please Wait ...");
+            pd.show();
+        }
+
+        @Override
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            String url = request.getUrl().toString();
+            handleUrl(view, url, headers);
+            return true;
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            handleUrl(view, url, headers);
+            return true;
+        }
+
+        @Override
+        public void onPageCommitVisible(WebView view, String url) {
+            super.onPageCommitVisible(view, url);
+            if (pd != null) {
+                pd.dismiss();
+            }
+        }
+    }
+
+
+    private void handleUrl(WebView webView, String url, Map<String, String> headers) {
+
     }
 }
     

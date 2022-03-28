@@ -32,10 +32,9 @@ import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsViewModel;
 public class PanicButtonFragment extends Fragment {
 
     ProgressDialog pd;
-    ImageView imageViewBack, imageViewProfileAvatar;
+    ImageView imageViewBack, imageViewProfileAvatar, imageViewPanicButton;
 
     TextView textViewPanicDescription;
-    Button buttonPanic;
 
     FragmentManager fragmentManager;
     private SharedPreferencesManager sharedPreferencesManager;
@@ -86,8 +85,8 @@ public class PanicButtonFragment extends Fragment {
         String panicDescription = String.format(getText(R.string.panic_description).toString(), nextOfKin.getRelationship(), nextOfKin.getFirstName(), nextOfKin.getLastName(), nextOfKin.getMsisdn());
         textViewPanicDescription.setText(panicDescription);
 
-        buttonPanic = view.findViewById(R.id.button_panic);
-        buttonPanic.setOnClickListener(view1 -> {
+        imageViewPanicButton = view.findViewById(R.id.button_panic);
+        imageViewPanicButton.setOnClickListener(view1 -> {
 
         });
     }
