@@ -43,7 +43,7 @@ public class SignUpViewModel extends ViewModel {
                         sharedPreferencesManager.setJWT(authResponseDto.getJwt());
                         sharedPreferencesManager.setUser(authResponseDto.getUser());
 
-                        responseLiveData.setValue(new ResponseDTO("success", null, null));
+                        responseLiveData.setValue(new ResponseDTO("success", null, authResponseDto.getUser()));
                     } else {
                         String responseMessage = handleHttpException(response);
                         responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));

@@ -152,9 +152,18 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
                 showProfileDetailsFragment();
                 break;
             case R.id.nav_panic_button:
-                PanicButtonFragment panicButtonFragment = new PanicButtonFragment();
-                transaction.add(R.id.container, panicButtonFragment, PanicButtonFragment.class.getSimpleName());
-                transaction.addToBackStack(TAG);
+                if (userDTO.getNextOfKin() != null) {
+                    PanicButtonFragment panicButtonFragment = new PanicButtonFragment();
+                    transaction.add(R.id.container, panicButtonFragment, PanicButtonFragment.class.getSimpleName());
+                    transaction.addToBackStack(TAG);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("initiatePanicButton", true);
+                    NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
+                    nextOfKinFragment.setArguments(bundle);
+                    transaction.add(R.id.container, nextOfKinFragment, NextOfKinFragment.class.getSimpleName());
+                    transaction.addToBackStack(TAG);
+                }
                 break;
             case R.id.nav_next_of_kin:
                 NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();

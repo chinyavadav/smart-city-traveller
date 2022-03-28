@@ -10,7 +10,7 @@ public class UserDto {
     private String lastName;
     private String avatar;
     private String password;
-    private NextOfKinDto nextOfKin;
+    private NextOfKin nextOfKin;
     private String created;
     private String updated;
 
@@ -70,11 +70,11 @@ public class UserDto {
         this.password = password;
     }
 
-    public NextOfKinDto getNextOfKin() {
+    public NextOfKin getNextOfKin() {
         return nextOfKin;
     }
 
-    public void setNextOfKin(NextOfKinDto nextOfKin) {
+    public void setNextOfKin(NextOfKin nextOfKin) {
         this.nextOfKin = nextOfKin;
     }
 

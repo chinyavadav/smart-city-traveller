@@ -62,7 +62,8 @@ public class ProductFragment extends Fragment {
             product = new Gson().fromJson(json, ProductDto.class);
         }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false);
+//        return inflater.inflate(R.layout.fragment_product, container, false);
+        return null;
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ProductFragment extends Fragment {
 
         textViewProductName = view.findViewById(R.id.text_view_product_name);
         textViewProductDescription = view.findViewById(R.id.text_view_product_description);
-        textViewProductPrice = view.findViewById(R.id.text_view_product_price);
+//        textViewProductPrice = view.findViewById(R.id.text_view_product_price);
 
         textViewProductName.setText(product.getName());
         textViewProductDescription.setText(product.getDescription());
@@ -103,7 +104,7 @@ public class ProductFragment extends Fragment {
                     100);
         }
 
-        buttonNavigate = view.findViewById(R.id.button_navigate);
+//        buttonNavigate = view.findViewById(R.id.button_navigate);
         buttonNavigate.setOnClickListener(view1 -> {
             pd.setMessage("Fetching Location....");
             pd.show();

@@ -2,12 +2,12 @@ package com.smartcitytraveller.mobile.api.dto;
 
 import java.util.UUID;
 
-public class NextOfKinDto {
+public class NextOfKin {
     private UUID id;
-    private String msisdn;
-    private String email;
+    private String relationship;
     private String firstName;
     private String lastName;
+    private String msisdn;
     private String created;
     private String updated;
 
@@ -19,20 +19,12 @@ public class NextOfKinDto {
         this.id = id;
     }
 
-    public String getMsisdn() {
-        return msisdn;
+    public String getRelationship() {
+        return relationship;
     }
 
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
     }
 
     public String getFirstName() {
@@ -49,6 +41,14 @@ public class NextOfKinDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
 
     public String getCreated() {
