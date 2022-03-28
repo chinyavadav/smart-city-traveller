@@ -72,4 +72,5 @@
     <string name="relationship">Relationship</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="panic_description">SMS notifications with your geographical coordinates will be sent to your %s: %s %s via SMS to the number %s after every 5 minutes.</string>
+    <string name="map_options">Map Options</string>
 </resources>

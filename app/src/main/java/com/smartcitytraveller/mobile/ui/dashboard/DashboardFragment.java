@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -26,10 +27,12 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.NextOfKinConstants;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -59,15 +62,16 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     ImageView imageViewProfileAvatar, imageViewNavHeaderAvatar, imageViewMenu;
     ProgressDialog pd;
     WebView webViewMap;
+    Button buttonMapOptions;
 
     FragmentManager fragmentManager;
     SharedPreferencesManager sharedPreferencesManager;
 
     UserDto userDTO;
     String authentication, link;
+    MapOptions viewName = MapOptions.placeMap;
+    boolean mapOptionsActive = false;
     private Map<String, String> headers = new HashMap<>();
-
-    double currentLat = -17.838721867867875, currentLng = 31.00688344366997, destinationLat = 0, destinationLng = 0;
 
     private ProfileDetailsViewModel profileDetailsViewModel;
 
@@ -83,7 +87,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         return inflater.inflate(R.layout.fragment_dashboard, container, false);
     }
 
-    @SuppressLint("DefaultLocale")
+    @SuppressLint({"DefaultLocale", "SetJavaScriptEnabled"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -117,14 +121,46 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
         imageViewProfileAvatar.setOnClickListener(v -> showProfileDetailsFragment());
 
-        link = CORE_BASE_URL + "/api/v1/navigation?currentLat=" + currentLat + "&currentLng=" + currentLng + "&destinationLat=" + destinationLat + "&destinationLng=" + destinationLng;
+        buttonMapOptions = view.findViewById(R.id.button_map_options);
+        buttonMapOptions.setOnClickListener(view1 -> {
+            if (!mapOptionsActive) {
+                mapOptionsActive = true;
+                MapOptions[] mapOptions = MapOptions.values();
+                CharSequence[] options = new CharSequence[mapOptions.length];
+                int index = 0;
+                for (MapOptions option : mapOptions) {
+                    options[index] = option.getDisplay();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.map_options));
+                builder.setNegativeButton(getString(android.R.string.cancel), (dialog, which) -> {
+                    mapOptionsActive = true;
+                    dialog.dismiss();
+                });
+                builder.setItems(options, (dialog, item) -> {
+                    String option = (String) options[item];
+                    mapOptionsActive = false;
+                    if (viewName == MapOptions.refresh) {
+                        loadMap(viewName);
+                    } else {
+                        viewName = MapOptions.getView(option);
+                        loadMap(viewName);
+                    }
+                });
+                builder.show();
+            }
+        });
+
         webViewMap = getView().findViewById(R.id.web_view_map);
         WebSettings webSettings = webViewMap.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        loadMap(viewName);
+    }
+
+    public void loadMap(MapOptions viewName) {
+        link = CORE_BASE_URL + "/api/v1/navigation?viewName=" + viewName.name();
         webViewMap.setWebViewClient(new NavigationWebViewClient());
         webViewMap.loadUrl(link, headers);
-
-
     }
 
     @Override
