@@ -130,6 +130,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
                 int index = 0;
                 for (MapOptions option : mapOptions) {
                     options[index] = option.getDisplay();
+                    index++;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle(getString(R.string.map_options));
@@ -140,7 +141,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
                 builder.setItems(options, (dialog, item) -> {
                     String option = (String) options[item];
                     mapOptionsActive = false;
-                    if (viewName == MapOptions.refresh) {
+                    if (MapOptions.getView(option).equals(MapOptions.refresh)) {
                         loadMap(viewName);
                     } else {
                         viewName = MapOptions.getView(option);
