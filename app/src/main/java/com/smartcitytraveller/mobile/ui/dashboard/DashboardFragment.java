@@ -2,15 +2,19 @@ package com.smartcitytraveller.mobile.ui.dashboard;
 
 import static com.smartcitytraveller.mobile.common.Constants.CORE_BASE_URL;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -31,8 +35,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.play.core.tasks.OnSuccessListener;
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.NextOfKinConstants;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
@@ -56,6 +62,8 @@ import java.util.Map;
 public class DashboardFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = DashboardFragment.class.getSimpleName();
 
+    public final int LAST_LOCATION = 220;
+
     DrawerLayout drawerLayout;
 
     TextView textViewFullName, textViewNavHeaderFullName, textViewMsisdn, textViewNavHeaderMsisdn;
@@ -66,6 +74,10 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     FragmentManager fragmentManager;
     SharedPreferencesManager sharedPreferencesManager;
+
+    double latitude = 0, longitude = 0;
+
+    private FusedLocationProviderClient fusedLocationClient;
 
     UserDto userDTO;
     String authentication, link;
@@ -78,6 +90,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
     }
 
     @Override
@@ -96,6 +109,11 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         authentication = sharedPreferencesManager.getAuthenticationToken();
         userDTO = sharedPreferencesManager.getUser();
+
+        if (!hasLocationPermission()) {
+            requestLocationPermission();
+        }
+        getLastLocation();
 
         drawerLayout = view.findViewById(R.id.drawer_layout);
         NavigationView navigationView = getView().findViewById(R.id.nav_view);
@@ -159,7 +177,8 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
     }
 
     public void loadMap(MapOptions viewName) {
-        link = CORE_BASE_URL + "/api/v1/navigation?viewName=" + viewName.name();
+        getLastLocation();
+        link = CORE_BASE_URL + "/api/v1/navigation?viewName=" + viewName.name() + "&lat=" + latitude + "&lng=" + longitude;
         webViewMap.setWebViewClient(new NavigationWebViewClient());
         webViewMap.loadUrl(link, headers);
     }
@@ -169,6 +188,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         super.onStart();
         Log.d(TAG, "onStart");
         syncDisplay();
+        getLastLocation();
     }
 
 
@@ -177,6 +197,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         super.onResume();
         Log.d(TAG, "onResume");
         syncDisplay();
+        getLastLocation();
     }
 
     public void showProfileDetailsFragment() {
@@ -270,6 +291,7 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
         textViewNavHeaderFullName.setText(fullName);
         textViewMsisdn.setText(msisdn);
         textViewNavHeaderMsisdn.setText(msisdn);
+        getLastLocation();
     }
 
     private class NavigationWebViewClient extends WebViewClient {
@@ -307,6 +329,30 @@ public class DashboardFragment extends Fragment implements NavigationView.OnNavi
 
     private void handleUrl(WebView webView, String url, Map<String, String> headers) {
 
+    }
+
+    private boolean hasLocationPermission() {
+        return ContextCompat
+                .checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                ||
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestLocationPermission() {
+        if (!hasLocationPermission()) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, LAST_LOCATION);
+        }
+    }
+
+    public void getLastLocation() {
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(location -> {
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                });
     }
 }
     

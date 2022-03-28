@@ -1,6 +1,8 @@
 package com.smartcitytraveller.mobile;
 
 import android.app.ProgressDialog;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,6 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private final LocationListener mLocationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            //your code here
+        }
+    };
 
     @Override
     public void onStart() {
