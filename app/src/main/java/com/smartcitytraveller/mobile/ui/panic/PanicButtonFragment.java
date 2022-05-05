@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -18,12 +19,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
+import com.smartcitytraveller.mobile.api.dto.Location;
 import com.smartcitytraveller.mobile.api.dto.NextOfKin;
+import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
 import com.smartcitytraveller.mobile.common.Util;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
 import com.smartcitytraveller.mobile.ui.profile.ProfileDetailsViewModel;
+
+import java.math.BigDecimal;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -87,7 +92,9 @@ public class PanicButtonFragment extends Fragment {
 
         imageViewPanicButton = view.findViewById(R.id.button_panic);
         imageViewPanicButton.setOnClickListener(view1 -> {
+            profileDetailsViewModel.hitPanicButtonApi(getContext(),authentication,userDTO.getId(),new Location(BigDecimal.ONE,BigDecimal.ONE)).observe(getViewLifecycleOwner(), responseDTO -> {
 
+            });
         });
     }
 }
