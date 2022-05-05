@@ -3,94 +3,103 @@ package com.smartcitytraveller.mobile.api.dto;
 import java.util.UUID;
 
 public class UserDto {
-    private UUID id;
-    private String msisdn;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String avatar;
-    private String password;
-    private NextOfKin nextOfKin;
-    private String created;
-    private String updated;
+  private UUID id;
+  private String msisdn;
+  private String email;
+  private String firstName;
+  private String lastName;
+  private String avatar;
+  private String password;
+  private NextOfKin nextOfKin;
+  private boolean panicMode;
+  private String created;
+  private String updated;
 
-    public UUID getId() {
-        return id;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public String getMsisdn() {
-        return msisdn;
-    }
+  public String getMsisdn() {
+    return msisdn;
+  }
 
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
+  public void setMsisdn(String msisdn) {
+    this.msisdn = msisdn;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public String getAvatar() {
-        return avatar;
-    }
+  public String getAvatar() {
+    return avatar;
+  }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+  public void setAvatar(String avatar) {
+    this.avatar = avatar;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public NextOfKin getNextOfKin() {
-        return nextOfKin;
-    }
+  public NextOfKin getNextOfKin() {
+    return nextOfKin;
+  }
 
-    public void setNextOfKin(NextOfKin nextOfKin) {
-        this.nextOfKin = nextOfKin;
-    }
+  public void setNextOfKin(NextOfKin nextOfKin) {
+    this.nextOfKin = nextOfKin;
+  }
 
-    public String getCreated() {
-        return created;
-    }
+  public boolean isPanicMode() {
+    return panicMode;
+  }
 
-    public void setCreated(String created) {
-        this.created = created;
-    }
+  public void setPanicMode(boolean panicMode) {
+    this.panicMode = panicMode;
+  }
 
-    public String getUpdated() {
-        return updated;
-    }
+  public String getCreated() {
+    return created;
+  }
 
-    public void setUpdated(String updated) {
-        this.updated = updated;
-    }
+  public void setCreated(String created) {
+    this.created = created;
+  }
+
+  public String getUpdated() {
+    return updated;
+  }
+
+  public void setUpdated(String updated) {
+    this.updated = updated;
+  }
 }

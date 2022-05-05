@@ -20,7 +20,7 @@ import android.widget.EditText;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
+import com.smartcitytraveller.mobile.api.dto.ResponseDto;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.initial.signin.SignInFragment;
 import com.smartcitytraveller.mobile.ui.initial.signup.SignUpFragment;
@@ -95,10 +95,10 @@ public class CheckFragment extends Fragment {
                 pd.setMessage("Authorizing ...");
                 pd.show();
 
-                checkViewModel.hitCheckApi(getActivity(), phoneNumber).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
+                checkViewModel.hitCheckApi(getActivity(), phoneNumber).observe(getViewLifecycleOwner(), new Observer<ResponseDto>() {
                     @Override
-                    public void onChanged(ResponseDTO responseDTO) {
-                        switch (responseDTO.getStatus()) {
+                    public void onChanged(ResponseDto responseDto) {
+                        switch (responseDto.getStatus()) {
                             case "success":
                                 CheckResponseDto checkResponseDto = sharedPreferencesManager.getAuthorization();
                                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -113,7 +113,7 @@ public class CheckFragment extends Fragment {
                                 break;
                             case "failed":
                             case "error":
-                                Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(view, responseDto.getMessage(), Snackbar.LENGTH_LONG).show();
                                 break;
                         }
                         pd.dismiss();

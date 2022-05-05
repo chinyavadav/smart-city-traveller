@@ -1,6 +1,6 @@
 package com.smartcitytraveller.mobile.ui.initial.check;
 
-import static com.smartcitytraveller.mobile.common.Util.handleHttpException;
+import static com.smartcitytraveller.mobile.utils.Utils.handleHttpException;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,12 +12,7 @@ import com.smartcitytraveller.mobile.api.APIService;
 import com.smartcitytraveller.mobile.api.RestClients;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
+import com.smartcitytraveller.mobile.api.dto.ResponseDto;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,10 +21,10 @@ import retrofit2.Response;
 public class CheckViewModel extends ViewModel {
     private static final String TAG = CheckViewModel.class.getSimpleName();
 
-    private MutableLiveData<ResponseDTO> responseLiveData;
+    private MutableLiveData<ResponseDto> responseLiveData;
     private final APIService apiService = new RestClients().get();
 
-    public MutableLiveData<ResponseDTO> hitCheckApi(final Context context, String phoneNumber) {
+    public MutableLiveData<ResponseDto> hitCheckApi(final Context context, String phoneNumber) {
         responseLiveData = new MutableLiveData<>();
         Call<CheckResponseDto> ul = apiService.check(phoneNumber);
         try {
@@ -43,17 +38,17 @@ public class CheckViewModel extends ViewModel {
                         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context);
                         sharedPreferencesManager.setAuthorization(checkResponseDto);
 
-                        responseLiveData.setValue(new ResponseDTO("success", null, null));
+                        responseLiveData.setValue(new ResponseDto("success", null, null));
                     } else {
                         String responseMessage = handleHttpException(response);
-                        responseLiveData.setValue(new ResponseDTO("failed", responseMessage, null));
+                        responseLiveData.setValue(new ResponseDto("failed", responseMessage, null));
                     }
                 }
 
                 @Override
                 public void onFailure(Call<CheckResponseDto> call, Throwable t) {
                     Log.d("error", t.toString());
-                    responseLiveData.setValue(new ResponseDTO("error", "Connectivity Issues!"+t.toString(), null));
+                    responseLiveData.setValue(new ResponseDto("error", "Connectivity Issues!"+t.toString(), null));
                 }
             });
         } catch (Exception e) {

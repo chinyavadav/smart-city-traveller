@@ -9,11 +9,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,20 +22,15 @@ import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
 import com.smartcitytraveller.mobile.api.dto.CheckResponseDto;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
 import com.smartcitytraveller.mobile.api.dto.SignInRequest;
 import com.smartcitytraveller.mobile.api.dto.UserDto;
-import com.smartcitytraveller.mobile.common.Util;
-import com.smartcitytraveller.mobile.common.Constants;
 import com.smartcitytraveller.mobile.database.SharedPreferencesManager;
 import com.smartcitytraveller.mobile.ui.initial.check.CheckFragment;
 import com.smartcitytraveller.mobile.ui.initial.forgotpassword.ForgotPasswordFragment;
 import com.smartcitytraveller.mobile.ui.dashboard.DashboardFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.smartcitytraveller.mobile.ui.panic.NextOfKinFragment;
+import com.smartcitytraveller.mobile.utils.Utils;
 
 /** A simple {@link Fragment} subclass. create an instance of this fragment. */
 public class SignInFragment extends Fragment {
@@ -137,10 +130,23 @@ public class SignInFragment extends Fragment {
                   .hitSignInApi(getActivity(), new SignInRequest(msisdn, password))
                   .observe(
                       getViewLifecycleOwner(),
+<<<<<<< HEAD
+<<<<<<< HEAD
+                      responseDto -> {
+                        switch (responseDto.getStatus()) {
+                          case "success":
+                            UserDto userDto = (UserDto) responseDto.getData();
+=======
+=======
+>>>>>>> 9444f1d (fix commits)
                       responseDTO -> {
                         switch (responseDTO.getStatus()) {
                           case "success":
                             UserDto userDto = (UserDto) responseDTO.getData();
+<<<<<<< HEAD
+>>>>>>> dc54f52 (fix commits)
+=======
+>>>>>>> 9444f1d (fix commits)
                             if (userDto.getNextOfKin() == null) {
                               NextOfKinFragment nextOfKinFragment = new NextOfKinFragment();
                               FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -161,7 +167,15 @@ public class SignInFragment extends Fragment {
                             break;
                           case "failed":
                           case "error":
+<<<<<<< HEAD
+<<<<<<< HEAD
+                            Snackbar.make(view, responseDto.getMessage(), Snackbar.LENGTH_LONG)
+=======
                             Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG)
+>>>>>>> dc54f52 (fix commits)
+=======
+                            Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG)
+>>>>>>> 9444f1d (fix commits)
                                 .show();
                             break;
                         }
@@ -175,6 +189,23 @@ public class SignInFragment extends Fragment {
 
     textViewChangePhone = getView().findViewById(R.id.text_view_change_phone);
     textViewChangePhone.setOnClickListener(
+<<<<<<< HEAD
+<<<<<<< HEAD
+        v -> {
+          Utils.clearSessionData(sharedPreferencesManager, getContext());
+          fragmentManager.popBackStack();
+          Fragment authorizeFragment =
+              fragmentManager.findFragmentByTag(CheckFragment.class.getSimpleName());
+          if (authorizeFragment == null) {
+            authorizeFragment = new CheckFragment();
+          }
+          FragmentTransaction transaction = fragmentManager.beginTransaction();
+          transaction.replace(
+              R.id.container, authorizeFragment, CheckFragment.class.getSimpleName());
+          transaction.commit();
+=======
+=======
+>>>>>>> 9444f1d (fix commits)
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -190,6 +221,10 @@ public class SignInFragment extends Fragment {
                 R.id.container, authorizeFragment, CheckFragment.class.getSimpleName());
             transaction.commit();
           }
+<<<<<<< HEAD
+>>>>>>> dc54f52 (fix commits)
+=======
+>>>>>>> 9444f1d (fix commits)
         });
   }
 }

@@ -20,11 +20,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.smartcitytraveller.mobile.R;
-import com.smartcitytraveller.mobile.api.dto.ResponseDTO;
-import com.smartcitytraveller.mobile.common.Util;
+import com.smartcitytraveller.mobile.api.dto.ResponseDto;
 import com.google.android.material.snackbar.Snackbar;
 import com.hbb20.CountryCodePicker;
 import com.smartcitytraveller.mobile.ui.initial.signin.SignInFragment;
+import com.smartcitytraveller.mobile.utils.Utils;
 
 import static com.smartcitytraveller.mobile.common.Validate.isValidMobileNumber;
 
@@ -65,55 +65,46 @@ public class ForgotPasswordFragment extends Fragment {
         pd = new ProgressDialog(getActivity());
 
         ccp = view.findViewById(R.id.ccp);
-        ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
-            @Override
-            public void onCountrySelected() {
-                countryCode = ccp.getSelectedCountryCode();
-                Log.d(TAG, countryCode);
-            }
+        ccp.setOnCountryChangeListener(() -> {
+            countryCode = ccp.getSelectedCountryCode();
+            Log.d(TAG, countryCode);
         });
         editTextPhoneNumber = view.findViewById(R.id.edit_text_phone_number);
 
         buttonRequestOTP = view.findViewById(R.id.button_request_otp);
-        buttonRequestOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                countryCode = (countryCode == null || countryCode.isEmpty()) ? ccp.getSelectedCountryCode() : countryCode;
-                long phoneNumber = 0;
-                try {
-                    phoneNumber = Long.parseLong(editTextPhoneNumber.getText().toString().trim());
-                } catch (Exception ignored) {
+        buttonRequestOTP.setOnClickListener(v -> {
+            countryCode = (countryCode == null || countryCode.isEmpty()) ? ccp.getSelectedCountryCode() : countryCode;
+            long phoneNumber = 0;
+            try {
+                phoneNumber = Long.parseLong(editTextPhoneNumber.getText().toString().trim());
+            } catch (Exception ignored) {
 
-                }
-                String msisdn = String.format("+%s%s", countryCode, phoneNumber);
-                boolean isPhoneNumberValid = isValidMobileNumber(msisdn);
-                if (isPhoneNumberValid) {
-                    pd.setMessage("Resetting Password...");
-                    pd.show();
-                    resetPasswordViewModel.hitResetPasswordApi(msisdn).observe(getViewLifecycleOwner(), new Observer<ResponseDTO>() {
-                        @Override
-                        public void onChanged(ResponseDTO responseDTO) {
-                            Util.hideSoftKeyboard(getActivity());
-                            pd.dismiss();
-                            switch (responseDTO.getStatus()) {
-                                case "success":
-                                    Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                                    SignInFragment signInFragment = new SignInFragment();
-                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                                    transaction.add(R.id.container, signInFragment, SignInFragment.class.getSimpleName());
-                                    transaction.addToBackStack(TAG);
-                                    transaction.commit();
-                                    break;
-                                case "failed":
-                                case "error":
-                                    Snackbar.make(view, responseDTO.getMessage(), Snackbar.LENGTH_LONG).show();
-                                    break;
-                            }
-                        }
-                    });
-                } else {
-                    Snackbar.make(view, "Enter valid Phone Number!", Snackbar.LENGTH_LONG).show();
-                }
+            }
+            String msisdn = String.format("+%s%s", countryCode, phoneNumber);
+            boolean isPhoneNumberValid = isValidMobileNumber(msisdn);
+            if (isPhoneNumberValid) {
+                pd.setMessage("Resetting Password...");
+                pd.show();
+                resetPasswordViewModel.hitResetPasswordApi(msisdn).observe(getViewLifecycleOwner(), responseDto -> {
+                    Utils.hideSoftKeyboard(getActivity());
+                    pd.dismiss();
+                    switch (responseDto.getStatus()) {
+                        case "success":
+                            Snackbar.make(view, responseDto.getMessage(), Snackbar.LENGTH_LONG).show();
+                            SignInFragment signInFragment = new SignInFragment();
+                            FragmentTransaction transaction = fragmentManager.beginTransaction();
+                            transaction.add(R.id.container, signInFragment, SignInFragment.class.getSimpleName());
+                            transaction.addToBackStack(TAG);
+                            transaction.commit();
+                            break;
+                        case "failed":
+                        case "error":
+                            Snackbar.make(view, responseDto.getMessage(), Snackbar.LENGTH_LONG).show();
+                            break;
+                    }
+                });
+            } else {
+                Snackbar.make(view, "Enter valid Phone Number!", Snackbar.LENGTH_LONG).show();
             }
         });
 

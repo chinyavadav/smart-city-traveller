@@ -1,29 +1,29 @@
 package com.smartcitytraveller.mobile.api.dto;
 
-import java.math.BigDecimal;
-
 public class Location {
-    private BigDecimal lat;
-    private BigDecimal lng;
+  private double lat;
+  private double lng;
 
-    public Location(BigDecimal lat, BigDecimal lng) {
-        this.lat = lat;
-        this.lng = lng;
-    }
+  public Location(double lat, double lng) {
+    this.lat = lat;
+    this.lng = lng;
+  }
 
-    public BigDecimal getLat() {
-        return lat;
-    }
+  public Location() {}
 
-    public void setLat(BigDecimal lat) {
-        this.lat = lat;
-    }
+  public double getLat() {
+    return lat;
+  }
 
-    public BigDecimal getLng() {
-        return lng;
-    }
+  public void setLat(double lat) {
+    this.lat = lat;
+  }
 
-    public void setLng(BigDecimal lng) {
-        this.lng = lng;
-    }
+  public double getLng() {
+    return lng;
+  }
+
+  public void setLng(double lng) {
+    this.lng = lng;
+  }
 }
